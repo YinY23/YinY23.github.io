@@ -112,8 +112,14 @@ h3 {
   color: pink;
 }
 
+.sidebar figure {
+  margin: auto;
+}
+.sidebar figcaption {
+  margin-left: 20px;
+}
+
 /* Responsibe web design */
-/*
 @media screen and (min-width: 120px) and (max-width: 1080px) {
   main {
     height: 100ch;
@@ -152,4 +158,3 @@ h3 {
     justify-content: center;
   }
 }
-*/
