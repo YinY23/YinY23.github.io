@@ -11,7 +11,7 @@ body {
 }
 
 nav {
-  background: rgb(239, 80, 41);
+  background: rgb(255, 193, 177);
   margin: 0 auto;
   display: flex;
   padding: 10px;
@@ -20,7 +20,7 @@ nav {
 h1 {
   display: flex;
   align-items: center;
-  color: white;
+  color: brown;
   flex: 1;
   margin: 0;
 }
@@ -39,7 +39,7 @@ h1 {
 
 a {
   text-decoration: none;
-  color: #fff;
+  color: brown;
 }
 
 /* Main container area beneath menu */
