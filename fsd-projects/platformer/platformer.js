@@ -65,7 +65,9 @@ $(function () {
 
     // TODO 4 - Create Cannons
 
-    // createCannon("left", 500, 3000);
+    // initial cannons
+    createCannon("top", 200, 3000);
+    createCannon("top", 100, 4500);
 
     //////////////////////////////////
     // ONLY CHANGE ABOVE THIS POINT //
