@@ -55,9 +55,9 @@ $(function () {
     createPlatform(150, 200, 8, bottom_screen - 200);
 
     // wall jumps
-    walljumps(0, easy_jump, 8);
-    walljumps(150, easy_jump - jump_height_easy, 8);
-    walljumps(0, easy_jump - 2 * jump_height_easy, 8);
+    walljumps(150, easy_jump, 8);
+    walljumps(0, easy_jump - jump_height_easy, 8);
+    walljumps(150, easy_jump - (2 * jump_height_easy), 8);
 
     // TODO 3 - Create Collectables
 
