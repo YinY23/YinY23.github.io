@@ -1,11 +1,16 @@
 body {
+  display: flex;
   align-self: center;
-  margin: 0px;
+  margin: auto;
+  margin-top: 5%;
+  background-color: bisque;
 }
 
 canvas {
+  display: flex;
   background-color: lightblue;
-  margin: 20px;
+  margin: auto;
+  padding: 0;
 }
 
 img {

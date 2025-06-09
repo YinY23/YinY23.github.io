@@ -7,13 +7,13 @@ $(function () {
   var jump = 600, easy_jump = 601;
   var bottom_screen = 740;
   var jump_height = 140, jump_height_easy = 139;
-  var halle_height = 100
-  
+  var halle_height = 100;
+
   // makes a wall that allows halle to "wall-jump"
   function walljumps(x, y, width) {
     createPlatform(x - 1, y, 0, 0); // left bottom "wall-jump"
     createPlatform(x - 1, y - 2, 0, 0); // left top "wall-jump"
-    createPlatform(x, y - 85, width, 85, "yellow") // indicator
+    createPlatform(x, y - 85, width, 85, "yellow"); // indicator
     createPlatform(x + 1 + width, y, 0, 0); // right bottom "wall-jump"
     createPlatform(x + 1 + width, y - 2, 0, 0); // right top "wall-jump"
   }
@@ -41,38 +41,79 @@ $(function () {
     //////////////////////////////////
 
     // TODO 1 - Enable the Grid
-    toggleGrid();
+    // toggleGrid();
 
     // TODO 2 - Create Platforms
 
     //beginning
 
-      // walls for the start
+    // walls for the start
     createPlatform(0, bottom_screen - 8 - 20, 150, 8);
     createPlatform(0, 0, 8, bottom_screen);
     createPlatform(150, 200, 8, bottom_screen - 200);
 
-      // wall jumps at the start
-    walljumps(150, easy_jump, 8);
-    walljumps(0, easy_jump - jump_height_easy, 8);
-    walljumps(150, easy_jump - (2 * jump_height_easy), 8);
+    // wall jumps at the start
+    for (i = 0; i < 3; i++) {
+      if (i % 2 === 0) {
+        walljumps(150, easy_jump - (i * jump_height_easy), 8);
+      }
+      else {
+        walljumps(0, easy_jump - (i * jump_height_easy), 8);
+      }
+    }
+    
+    // for loop replaced three lines of code :)
+    // walljumps(150, easy_jump, 8);
+    // walljumps(0, easy_jump - jump_height_easy, 8);
+    // walljumps(150, easy_jump - 2 * jump_height_easy, 8);
 
     // after the beginning
     createPlatform(150, 200, 1150, 8); // top platform
     createPlatform(canvas.width - 8, 0, 8, bottom_screen); // right wall
     createPlatform(canvas.width - 150 - 8, 200 + halle_height, 8, bottom_screen - 200 - halle_height); // border wall
-    
-    walljumps(canvas.width - 8, 200 + jump_height_easy, 8); // first wall jump
-    walljumps(canvas.width - 8, 200 + (2 * jump_height_easy), 8); // second wall jump
-    walljumps(canvas.width - 8, 200 + (3 * jump_height_easy), 8); // third wall jump
-    createPlatform(canvas.width - 150, 200 + (1 * jump_height_easy), 10, 8); // second part
 
-    createPlatform(150, 700, 1250 - 150, 8);
+    // right border wall-jumps
+    for (i = 0; i < 3; i++) {
+      walljumps(canvas.width - 8, 200 + (i + 1) * jump_height_easy, 8);
+    }
+    
+    createPlatform(canvas.width - 150, 200 + 1 * jump_height_easy, 10, 8); // ledge
+
+    // end
+    createPlatform(150, 700, 1250 - 150, 8); // base floor
+
+    // individual floors
+    for (i = 0; i < 4; i++) {
+      createPlatform(300 + (i * 200), 750 - jump_height_easy, 100, 8);
+    }
+
+    // wall jumps
+    for (i = 0; i < 5; i++) {
+      walljumps(250 + (i * 200), 750 - (2 * jump_height_easy), 8);
+    }
+    
+    // second floor
+    for (i = 0; i < 5; i++) {
+      createPlatform(250 + (i * 200), 750 - (3 * jump_height_easy), 100, 8);
+    }
+
+    // a little difficulty
+    for (i = 0; i < 4; i++) {
+      createPlatform(550 + (i * 200), 250, 8, 50);
+    }
 
     // TODO 3 - Create Collectables
 
     createCollectable("steve", 1350, 50);
     createCollectable("diamond", 1350, 600);
+
+    for (i = 0; i < 5; i++) {
+      createCollectable("database", 250 + (i * 200), 650);
+    }
+    
+    for (i = 0; i < 5; i++) {
+      createCollectable("database", 300 + (i * 200), 250);
+    }
 
     // TODO 4 - Create Cannons
 
@@ -80,15 +121,13 @@ $(function () {
     createCannon("left", 666, 100);
 
     // initial cannons
-    // createCannon("top", 200, 3000);
-    // createCannon("top", 100, 4500);
+    createCannon("top", 200, 3000);
+    createCannon("top", 100, 4500);
 
     // top cannons
-    createCannon("top", 300, 5000);
-    createCannon("top", 500, 5000);
-    createCannon("top", 700, 5000);
-    createCannon("top", 900, 5000);
-    createCannon("top", 1100, 5000);
+    for (i = 0; i < 6; i++) {
+      createCannon("top", 300 + (i * 200), 5000);
+    }
 
     // wall jump cannon
     createCannon("right", 650, 3000);
