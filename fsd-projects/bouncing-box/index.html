@@ -1,218 +1,314 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>boxeys</title>
+    <link rel="icon" type="image/x-icon" href="/images by yin/mochabear.png" />
+    <script src="jquery.min.js"></script>
+    <style>
+      :root {
+        --side: 80px;
+        font-size: 200%;
+        font-family: Impact;
+        color: black;
+      }
+      .box {
+        width: var(--side);
+        height: var(--side);
+        background-color: rgb(255, 148, 172);
+        border: 1px solid black;
+        /* border-radius: 100%; */
 
-<head>
-	<meta charset="utf-8">
-	<title>boxeys</title>
-	<link rel="icon" type="image/x-icon" href="/images by yin/mochabear.png" />
-	<script src="jquery.min.js"></script>
-	<style>
-		:root {
-			--side: 80px;
-		}
-		.box {
-			width: var(--side);
-			height: var(--side);
-			background-color: rgb(255, 148, 172);
-			border: 1px solid black;
-			/* border-radius: 100%; */
+        font-size: 300%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-			font-size: 300%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
+        user-select: none;
+        position: absolute;
 
-			user-select: none;
-			position: absolute;
+        /* Change me! */
+        top: 0px;
+        left: 0px;
+      }
 
-			/* Change me! */
-			top: 0px;
-			left: 0px;
-		}
+      .board {
+        background-color: bisque;
+        height: 100vh;
+        padding: 0;
+        margin: 0 auto;
 
-		.board {
-			background-color: bisque;
-			height: 100vh;
-			padding: 0;
-			margin: 0 auto;
-		}
-		.score {
-			justify-self: center;
-			font-size: 200%;
-			font-family: Impact;
-			color: black;
-		}
-	</style>
-		<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+        display: flexbox;
+        /* justify-content: center; */
+      }
 
-</head>
+      .navigation {
+        background-color: white;
+        padding: 0 auto;
+        margin: 10px;
+        border-radius: 20px;
 
-<body class="board">
-	<div class="score">Score: </div>
-	<!-- HTML for the box -->
-	<div class="box">?</div>
+        display: flex;
+      }
 
-	<script>
-		(function () {
-			'use strict'
-			/* global jQuery */
+      .auto {
+        margin-left: 5%;
+        align-self: center;
+      }
 
-			//////////////////////////////////////////////////////////////////
-			/////////////////// SETUP DO NOT DELETE //////////////////////////
-			//////////////////////////////////////////////////////////////////
+      .score {
+        margin-left: 5%;
+      }
 
-			var box = jQuery('.box');	// reference to the HTML .box element
-			var board = jQuery('.board');	// reference to the HTML .board element
-			var score = jQuery('.score'); // reference to the HTML .score element
-			var boardWidth = board.width();	// the maximum X-Coordinate of the screen
-			var fresh = 50; // delay in milliseconds between each refresh
+      .misses {
+        margin-left: 5%;
+      }
 
-			// Every fresh milliseconds, call the update Function (see below)
-			var updateInterval = setInterval(update, fresh);
+      .accuracy {
+        margin-left: 5%;
+      }
 
-			// Every time the box is clicked, call the handleBoxClick Function (see below)
-			box.on('click', handleBoxClick);
-			
-			// moves the Box to a new position on the screen along the X-Axis
-			function moveBoxTo(newPositionX) {
-				box.css("left", newPositionX);
-			}
+      .list {
+        list-style-type: none; /* gets rid of the bullet points */
 
-			// changes the text displayed on the Box
-			function changeBoxText(newText) {
-				box.text(newText);
-			}
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-			//////////////////////////////////////////////////////////////////
-			/////////////////// YOUR CODE BELOW HERE /////////////////////////
-			//////////////////////////////////////////////////////////////////
+        margin-left: auto;
+        margin-right: 2%;
+        margin-top: 0;
+        margin-bottom: 0;
 
-			// TODO 2 - Variable declarations 
+        font-size: 60%;
+      }
+      .links {
+        background-color: silver;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 30%;
 
-			// length of the box
-			var boxLength = 80;
+        margin-right: 1%;
+      }
 
-			// color of the box
-			var tempcol1 = parseInt(Math.random() * 256);
-			var tempcol2 = parseInt(Math.random() * 256);
-			var tempcol3 = parseInt(Math.random() * 256);
+      .links > a {
+        text-decoration: none; /* got rid of the underline */
+        color: black; /* color of the link texts */
+      }
+    </style>
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+  </head>
 
-			// makes sure the color of the box is not the color of the background "bisque"
-			while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
-				tempcol1 = parseInt(Math.random() * 256);
-				tempcol2 = parseInt(Math.random() * 256);
-				tempcol3 = parseInt(Math.random() * 256);
-			}
-			box.css("background-color", "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")");
+  <body class="board">
+    <nav class="navigation">
+      <!-- HTML for the score -->
+      <div class="score auto">Score: 0</div>
 
-			// points used for score and speed calculation
-			var points = 0;
-			// position change for X and Y per click
-			var speedFrame = 2;
+      <!-- HTML for the misses -->
+      <div class="misses auto">Misses: 0</div>
 
-			// random number for position
-			var rngX = Math.random();
-			while (rngX > 1 - (boxLength / board.width())) {
-				rngX = Math.random();
-			}
-			var rngY = Math.random();
-			while(rngY > 1 - (boxLength / board.width())) {
-				rngY = Math.random();
-			}
+      <!-- HTML for the accuracy -->
+      <div class="accuracy auto">Accuracy: 100%</div>
+      
+      <ul class="list">
+        <li class="links">
+          <a href="/index.html"> Home </a>
+        </li>
+        <li class="links">
+          <a href="/portfolio.html"> Portfolio </a>
+        </li>
+      </ul>
+    </nav>
 
-			// objects speed and position in the X direction
-			var positionX = rngX * board.width();
-			var speedX = 10;
+    <!-- HTML for the box -->
+    <div class="box"></div>
 
-			// objects speed and position in the Y direction
-			var positionY = rngY * board.height();
-			var speedY = 10;
+    <script>
+      (function () {
+        "use strict";
+        /* global jQuery */
 
-			// universal speed
-			var speed = 0;
+        //////////////////////////////////////////////////////////////////
+        /////////////////// SETUP DO NOT DELETE //////////////////////////
+        //////////////////////////////////////////////////////////////////
 
-			// interval
-			var tickerID = false;
-			function ticker() {
-				tickerID = setInterval(update, 50);
-			}
+        var box = jQuery(".box"); // reference to the HTML .box element
+        var board = jQuery(".board"); // reference to the HTML .board element
+        var score = jQuery(".score"); // reference to the HTML .score element
+        var misses = jQuery(".misses"); // reference to the HTML .misses element
+        var accuracy = jQuery(".accuracy"); // reference to the HTML .accuracy element
 
-			/* 
-			This Function will be called 20 times/second. Each time it is called,
-			it should move the Box to a new location. If the box drifts off the screen
-			turn it around! 
-			*/
-			function update() {
-				// updates the object in the X direction
-				if (positionX + 80 > boardWidth || positionX < 0) {
-					speedX *= -1;
-				}
-				positionX += speedX;
-				box.css("left", positionX);
+        var boardWidth = board.width(); // the maximum X-Coordinate of the screen
+        var fresh = 1; // delay in milliseconds between each refresh
 
-				// updates the object in the Y direction
-				if (positionY + 80 > board.height() || positionY < 0) {
-					speedY *= -1;
-				}
-				positionY += speedY;
-				box.css("top", positionY);
-			};
+        // Every fresh milliseconds, call the update Function (see below)
+        var updateInterval = setInterval(update, fresh);
 
-			/* 
-			This Function will be called each time the box is clicked. Each time it is called,
-			it should increase the points total, increase the speed, and move the box to
-			the left side of the screen.
-			*/
-			function handleBoxClick() {
-				// sets the position of the object to a random X and Y position every click done on the box
-				rngX = Math.random();
-				while (rngX > 1 - (boxLength / board.width())) {
-					rngX = Math.random();
-				}
-				rngY = Math.random();
-				while(rngY > 1 - (boxLength / board.width())) {
-					rngY = Math.random();
-				}
-				positionX = rngX * board.width();
-				positionY = rngY * board.height();
+        // Every time the box is clicked, call the handleBoxClick Function (see below)
+        box.on("click", handleBoxClick);
 
-				// adds a point and calculates speed
-				++ points;
-				box.text(points);
-				speedX = 10 + (speedFrame * parseInt(points / 3));
-				speedY = 10 + (speedFrame * parseInt(points / 3));
+        // Every time the board is clicked, call the handleBoardClick Function (see below)
+        var boardClicks = board.on("click", handleBoardClick);
 
-				// gives the object an opportunity to change direction every click
-				var temprngX = parseInt(Math.random() * 2);
-				if (temprngX % 2 === 0) {
-					speedX *= -1;
-				}
-				var temprngY = parseInt(Math.random() * 2);
-				if (temprngY % 2 === 0) {
-					speedY *= -1;
-				}
+        // moves the Box to a new position on the screen along the X-Axis
+        function moveBoxTo(newPositionX) {
+          box.css("left", newPositionX);
+        }
 
-				// randomizes the color of the box
-				tempcol1 = parseInt(Math.random() * 256);
-				tempcol2 = parseInt(Math.random() * 256);
-				tempcol3 = parseInt(Math.random() * 256);
-				while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
-					tempcol1 = parseInt(Math.random() * 256);
-					tempcol2 = parseInt(Math.random() * 256);
-					tempcol3 = parseInt(Math.random() * 256);
-				}
-				box.css("background-color", "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")");
+        // changes the text displayed on the Box
+        function changeBoxText(newText) {
+          box.text(newText);
+        }
 
-				// if (tickerID !== false) {
-				// 	clearInterval(tickerID);
-				// 	tickerID = false;
-				// }
-				// else {
-				// 	ticker();
-				// }
-			};
-		})();
-	</script>
-</body>
+        //////////////////////////////////////////////////////////////////
+        /////////////////// YOUR CODE BELOW HERE /////////////////////////
+        //////////////////////////////////////////////////////////////////
 
+        // TODO 2 - Variable declarations
+
+        // color of the box
+        var tempcol1 = parseInt(Math.random() * 256);
+        var tempcol2 = parseInt(Math.random() * 256);
+        var tempcol3 = parseInt(Math.random() * 256);
+
+        // makes sure the color of the box is not the color of the background "bisque"
+        while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
+          tempcol1 = parseInt(Math.random() * 256);
+          tempcol2 = parseInt(Math.random() * 256);
+          tempcol3 = parseInt(Math.random() * 256);
+        }
+        box.css(
+          "background-color",
+          "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")"
+        );
+
+        // points used for score and speed calculation
+        var points = 0;
+        // position change for X and Y per every 3 clicks
+        var speedFrame = 1;
+
+        // random number for position
+        var rngX = Math.random();
+        while (rngX > 1 - (box.outerWidth() / board.width())) {
+          rngX = Math.random();
+        }
+        var rngY = Math.random();
+        while (rngY > 1 - (box.outerHeight() / board.width())) {
+          rngY = Math.random();
+        }
+
+        // objects position in the X direction
+        var positionX = rngX * board.width();
+        
+        // objects position in the Y direction
+        var positionY = rngY * board.height();
+        
+        // speeds
+        var speed = 1;
+        var speedX = speed;
+        var speedY = speed;
+
+        // interval
+        var tickerID = false;
+        function ticker() {
+          tickerID = setInterval(update, 50);
+        }
+
+        // misclicks
+        var misClicks = 0;
+
+        /* 
+        This Function will be called 1000/fresh times/second. Each time it is called,
+        it should move the Box to a new location. If the box drifts off the screen
+        turn it around! 
+        */
+        function update() {
+          // clears the update interval
+          if (misClicks === points + 10) {
+            clearInterval(updateInterval);
+          }
+
+          // updates the object in the X direction
+          if (positionX + box.outerWidth() > boardWidth || positionX < 0) {
+            speedX *= -1;
+          }
+          positionX += speedX;
+          box.css("left", positionX);
+
+          // updates the object in the Y direction
+          if (positionY + box.outerHeight() > board.height() || positionY < 0) {
+            speedY *= -1;
+          }
+          positionY += speedY;
+          box.css("top", positionY);
+        }
+
+        function accuracyUpdate() {
+          accuracy.text("Accuracy: " + (100 * (points / misClicks)) + "%");
+        }
+
+        /*
+        This Function will be called each time the board is clicked
+        */
+        function handleBoardClick() {
+          misClicks ++;
+          misses.text("Misses: " + misClicks);
+          accuracyUpdate();
+        }
+
+        /* 
+        This Function will be called each time the box is clicked. Each time it is called,
+        it should increase the points total, increase the speed, and move the box to
+        the left side of the screen.
+        */
+        function handleBoxClick() {
+          // sets the position of the object to a random X and Y position every click done on the box
+          rngX = Math.random();
+          while (rngX > 1 - (box.outerWidth() / board.width())) {
+            rngX = Math.random();
+          }
+          rngY = Math.random();
+          while (rngY > 1 - (box.outerHeight() / board.height())) {
+            rngY = Math.random();
+          }
+          positionX = rngX * board.width();
+          positionY = rngY * board.height();
+
+          // adds a point and calculates speed
+          ++points;
+          speedX = 1 + speedFrame * parseInt(points / 3);
+          speedY = 1 + speedFrame * parseInt(points / 3);
+
+          // gives the object an opportunity to change direction every click
+          var temprngX = parseInt(Math.random() * 2);
+          if (temprngX % 2 === 0) {
+            speedX *= -1;
+          }
+          var temprngY = parseInt(Math.random() * 2);
+          if (temprngY % 2 === 0) {
+            speedY *= -1;
+          }
+
+          // randomizes the color of the box
+          tempcol1 = parseInt(Math.random() * 256);
+          tempcol2 = parseInt(Math.random() * 256);
+          tempcol3 = parseInt(Math.random() * 256);
+          while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
+            tempcol1 = parseInt(Math.random() * 256);
+            tempcol2 = parseInt(Math.random() * 256);
+            tempcol3 = parseInt(Math.random() * 256);
+          }
+          box.css(
+            "background-color",
+            "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")"
+          );
+
+          // score element
+          score.text("Score: " + points);
+
+          accuracyUpdate();
+        }
+      })();
+    </script>
+  </body>
 </html>

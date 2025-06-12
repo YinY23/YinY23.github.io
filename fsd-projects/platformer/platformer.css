@@ -1,9 +1,52 @@
 body {
-  display: flex;
+  display: flexbox;
   align-self: center;
   margin: auto;
-  margin-top: 5%;
+  /* margin-top: 2%; */
   background-color: bisque;
+}
+
+.title {
+  font-size: 200%;
+  font-family: Impact;
+  justify-self: center;
+  align-self: center;
+  margin-left: 40%;
+}
+
+nav {
+  display: flex;
+  margin-bottom: 2%;
+
+  background-color: pink;
+}
+
+.nav-ul {
+  list-style-type: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-left: auto;
+  margin-right: 2%;
+}
+
+.links {
+  background-color: bisque;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 30%;
+
+  justify-content: center;
+  align-self: center;
+
+  margin-right: 10%;
+}
+
+.links > a {
+  text-decoration: none; /* gets rid of the underline */
+  color: silver;
 }
 
 canvas {
