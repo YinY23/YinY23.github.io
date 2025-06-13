@@ -2,9 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>boxeys</title>
+    <title>boxies</title>
     <link rel="icon" type="image/x-icon" href="/images by yin/mochabear.png" />
-    <script src="jquery.min.js"></script>
     <style>
       :root {
         --side: 80px;
@@ -95,33 +94,54 @@
         text-decoration: none; /* got rid of the underline */
         color: black; /* color of the link texts */
       }
+      
+      #bounceScreen {
+        display: none;
+      }
+
+      #start {
+        display: flex;
+        justify-self: center;
+        margin-top: 50vh;
+
+        padding: 100px;
+        background-color: chartreuse;
+        color: purple;
+        border: 2px solid black;
+      }
     </style>
-    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
 
   <body class="board">
-    <nav class="navigation">
-      <!-- HTML for the score -->
-      <div class="score auto">Score: 0</div>
+    <div class="pre">
+      <button id="start">Start</button>
+    </div>
+    <div class="main" id="bounceScreen">
+      <nav class="navigation">
+        <!-- HTML for the score -->
+        <div class="score auto">Score: 0</div>
 
-      <!-- HTML for the misses -->
-      <div class="misses auto">Misses: 0</div>
+        <!-- HTML for the misses -->
+        <div class="misses auto">Misses: 0</div>
 
-      <!-- HTML for the accuracy -->
-      <div class="accuracy auto">Accuracy: 100%</div>
-      
-      <ul class="list">
-        <li class="links">
-          <a href="/index.html"> Home </a>
-        </li>
-        <li class="links">
-          <a href="/portfolio.html"> Portfolio </a>
-        </li>
-      </ul>
-    </nav>
+        <!-- HTML for the accuracy -->
+        <div class="accuracy auto">Accuracy: 100%</div>
+        
+        <ul class="list">
+          <li class="links">
+            <a href="/index.html"> Home </a>
+          </li>
+          <li class="links">
+            <a href="/portfolio.html"> Portfolio </a>
+          </li>
+        </ul>
+      </nav>
 
-    <!-- HTML for the box -->
-    <div class="box"></div>
+      <!-- HTML for the box -->
+      <div class="box"></div>
+    </div>
 
     <script>
       (function () {
@@ -148,7 +168,7 @@
         box.on("click", handleBoxClick);
 
         // Every time the board is clicked, call the handleBoardClick Function (see below)
-        var boardClicks = board.on("click", handleBoardClick);
+        var boardClicks;
 
         // moves the Box to a new position on the screen along the X-Axis
         function moveBoxTo(newPositionX) {
@@ -214,8 +234,9 @@
           tickerID = setInterval(update, 50);
         }
 
-        // misclicks
+        // misclicks + totalClicks
         var misClicks = 0;
+        var totalClicks = 0;
 
         /* 
         This Function will be called 1000/fresh times/second. Each time it is called,
@@ -244,16 +265,21 @@
         }
 
         function accuracyUpdate() {
-          accuracy.text("Accuracy: " + (100 * (points / misClicks)) + "%");
+          accuracy.text("Accuracy: " + (Math.round(10000 * (points / totalClicks))) / 100 + "%");
         }
 
         /*
         This Function will be called each time the board is clicked
         */
         function handleBoardClick() {
-          misClicks ++;
-          misses.text("Misses: " + misClicks);
+          if (points === 0) { // change this
+            return;
+          }
+          else {
+            ++ totalClicks;
+          misses.text("Misses: " + (++ misClicks));
           accuracyUpdate();
+          }
         }
 
         /* 
@@ -306,8 +332,20 @@
           // score element
           score.text("Score: " + points);
 
+          --misClicks;
           accuracyUpdate();
         }
+
+        function startClick() {
+          document.getElementById("start").removeEventListener("click", startClick); // not necessary if the display is "none";
+          $("#start").css("display", "none");
+          $("#bounceScreen").css("display", "block");
+          boardClicks = board.on("click", handleBoardClick);
+        }
+
+        document.getElementById("start").addEventListener("click", startClick);
+
+        // $(".box").css("background-color", "black"); // some jQuery element manipulation with "$" selector
       })();
     </script>
   </body>
