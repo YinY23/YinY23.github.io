@@ -1,0 +1,105 @@
+:root {
+    --side: 80px;
+    font-size: 200%;
+    font-family: Impact;
+    color: black;
+}
+
+.box {
+    width: var(--side);
+    height: var(--side);
+    background-color: rgb(255, 148, 172);
+    border: 1px solid black;
+
+    font-size: 300%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    user-select: none;
+    position: absolute;
+
+    /* Change me! */
+    top: 0px;
+    left: 0px;
+}
+
+.board {
+    background-color: rgb(16, 70, 141);
+    height: 100vh;
+    padding: 0;
+    margin: 0 auto;
+
+    display: flexbox;
+    /* justify-content: center; */
+}
+
+.navigation {
+    background-color: white;
+    padding: 0 auto;
+    margin: 10px;
+    border-radius: 20px;
+
+    display: flex;
+}
+
+.auto {
+    margin-left: 5%;
+    align-self: center;
+}
+
+.score {
+    margin-left: 5%;
+}
+
+.misses {
+    margin-left: 5%;
+}
+
+.accuracy {
+    margin-left: 5%;
+}
+
+.list {
+    list-style-type: none; /* gets rid of the bullet points */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: auto;
+    margin-right: 2%;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    font-size: 60%;
+}
+
+.links {
+    background-color: silver;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 30%;
+
+    margin-right: 1%;
+}
+
+.links > a {
+    text-decoration: none; /* got rid of the underline */
+    color: black; /* color of the link texts */
+}
+
+#bounceScreen {
+    /* display: none; */
+}
+
+#start {
+    display: flex;
+    justify-self: center;
+    margin-top: 50vh;
+
+    padding: 100px;
+    background-color: chartreuse;
+    color: purple;
+    border: 2px solid black;
+}

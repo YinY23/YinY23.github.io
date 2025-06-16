@@ -4,122 +4,14 @@
     <meta charset="utf-8" />
     <title>boxies</title>
     <link rel="icon" type="image/x-icon" href="/images by yin/mochabear.png" />
-    <style>
-      :root {
-        --side: 80px;
-        font-size: 200%;
-        font-family: Impact;
-        color: black;
-      }
-      .box {
-        width: var(--side);
-        height: var(--side);
-        background-color: rgb(255, 148, 172);
-        border: 1px solid black;
-        /* border-radius: 100%; */
-
-        font-size: 300%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        user-select: none;
-        position: absolute;
-
-        /* Change me! */
-        top: 0px;
-        left: 0px;
-      }
-
-      .board {
-        background-color: bisque;
-        height: 100vh;
-        padding: 0;
-        margin: 0 auto;
-
-        display: flexbox;
-        /* justify-content: center; */
-      }
-
-      .navigation {
-        background-color: white;
-        padding: 0 auto;
-        margin: 10px;
-        border-radius: 20px;
-
-        display: flex;
-      }
-
-      .auto {
-        margin-left: 5%;
-        align-self: center;
-      }
-
-      .score {
-        margin-left: 5%;
-      }
-
-      .misses {
-        margin-left: 5%;
-      }
-
-      .accuracy {
-        margin-left: 5%;
-      }
-
-      .list {
-        list-style-type: none; /* gets rid of the bullet points */
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        margin-left: auto;
-        margin-right: 2%;
-        margin-top: 0;
-        margin-bottom: 0;
-
-        font-size: 60%;
-      }
-      .links {
-        background-color: silver;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 30%;
-
-        margin-right: 1%;
-      }
-
-      .links > a {
-        text-decoration: none; /* got rid of the underline */
-        color: black; /* color of the link texts */
-      }
-      
-      #bounceScreen {
-        display: none;
-      }
-
-      #start {
-        display: flex;
-        justify-self: center;
-        margin-top: 50vh;
-
-        padding: 100px;
-        background-color: chartreuse;
-        color: purple;
-        border: 2px solid black;
-      }
-    </style>
+    <link rel="stylesheet" href="/fsd-projects/bouncing-box/Bounce.css" />
     <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
-
-  <body class="board">
-    <div class="pre">
-      <button id="start">Start</button>
-    </div>
+  <body class="board" id="board">
+    <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
-      <nav class="navigation">
+      <!-- Nav bar -->
+      <nav class="navigation" id="navigation">
         <!-- HTML for the score -->
         <div class="score auto">Score: 0</div>
 
@@ -129,6 +21,7 @@
         <!-- HTML for the accuracy -->
         <div class="accuracy auto">Accuracy: 100%</div>
         
+        <!-- Links list -->
         <ul class="list">
           <li class="links">
             <a href="/index.html"> Home </a>
@@ -140,212 +33,168 @@
       </nav>
 
       <!-- HTML for the box -->
-      <div class="box"></div>
+      <div class="box" id="box"></div>
     </div>
-
     <script>
       (function () {
-        "use strict";
-        /* global jQuery */
+        // width and height of the board
+        var boardWidth = parseFloat(window.getComputedStyle(document.getElementById("board")).width);
+        var boardHeight = parseFloat(window.getComputedStyle(document.getElementById("board")).height);
 
-        //////////////////////////////////////////////////////////////////
-        /////////////////// SETUP DO NOT DELETE //////////////////////////
-        //////////////////////////////////////////////////////////////////
+        // width and height of the box
+        var boxWidth = parseFloat(window.getComputedStyle(document.getElementById("box")).width);
+        var boxHeight = parseFloat(window.getComputedStyle(document.getElementById("box")).height);
 
-        var box = jQuery(".box"); // reference to the HTML .box element
-        var board = jQuery(".board"); // reference to the HTML .board element
-        var score = jQuery(".score"); // reference to the HTML .score element
-        var misses = jQuery(".misses"); // reference to the HTML .misses element
-        var accuracy = jQuery(".accuracy"); // reference to the HTML .accuracy element
-
-        var boardWidth = board.width(); // the maximum X-Coordinate of the screen
-        var fresh = 1; // delay in milliseconds between each refresh
-
-        // Every fresh milliseconds, call the update Function (see below)
-        var updateInterval = setInterval(update, fresh);
-
-        // Every time the box is clicked, call the handleBoxClick Function (see below)
-        box.on("click", handleBoxClick);
-
-        // Every time the board is clicked, call the handleBoardClick Function (see below)
-        var boardClicks;
-
-        // moves the Box to a new position on the screen along the X-Axis
-        function moveBoxTo(newPositionX) {
-          box.css("left", newPositionX);
-        }
-
-        // changes the text displayed on the Box
-        function changeBoxText(newText) {
-          box.text(newText);
-        }
-
-        //////////////////////////////////////////////////////////////////
-        /////////////////// YOUR CODE BELOW HERE /////////////////////////
-        //////////////////////////////////////////////////////////////////
-
-        // TODO 2 - Variable declarations
-
-        // color of the box
-        var tempcol1 = parseInt(Math.random() * 256);
-        var tempcol2 = parseInt(Math.random() * 256);
-        var tempcol3 = parseInt(Math.random() * 256);
-
-        // makes sure the color of the box is not the color of the background "bisque"
-        while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
-          tempcol1 = parseInt(Math.random() * 256);
-          tempcol2 = parseInt(Math.random() * 256);
-          tempcol3 = parseInt(Math.random() * 256);
-        }
-        box.css(
-          "background-color",
-          "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")"
-        );
-
-        // points used for score and speed calculation
-        var points = 0;
-        // position change for X and Y per every 3 clicks
-        var speedFrame = 1;
-
-        // random number for position
-        var rngX = Math.random();
-        while (rngX > 1 - (box.outerWidth() / board.width())) {
-          rngX = Math.random();
-        }
-        var rngY = Math.random();
-        while (rngY > 1 - (box.outerHeight() / board.width())) {
-          rngY = Math.random();
-        }
-
-        // objects position in the X direction
-        var positionX = rngX * board.width();
-        
-        // objects position in the Y direction
-        var positionY = rngY * board.height();
+        var points = 0; // points used for score and speed calculation
+        var misClicks = 0; // amount of misclicks
+        var threshold = 10; // amount of misclicks for the game to end
+        var clicked = 3; // how many box clicks does it take before the speed changes
+        var speedFrame = 1; // speed change every clicked clicks
         
         // speeds
         var speed = 1;
         var speedX = speed;
         var speedY = speed;
 
-        // interval
-        var tickerID = false;
-        function ticker() {
-          tickerID = setInterval(update, 50);
-        }
+        // box's position in the x and y direction
+        var positionX;
+        var positionY;
+        randomizeBoxLocation();
 
-        // misclicks + totalClicks
-        var misClicks = 0;
-        var totalClicks = 0;
+        // box's current x and y direction after every update
+        var boxCurrentX;
+        var boxCurrentY;
 
-        /* 
-        This Function will be called 1000/fresh times/second. Each time it is called,
-        it should move the Box to a new location. If the box drifts off the screen
-        turn it around! 
-        */
-        function update() {
-          // clears the update interval
-          if (misClicks === points + 10) {
-            clearInterval(updateInterval);
-          }
+        // Every time the board is clicked, call the handleBoardClick Function (see below)
+        document.getElementById("board").addEventListener("click", handleBoardClick);
 
-          // updates the object in the X direction
-          if (positionX + box.outerWidth() > boardWidth || positionX < 0) {
-            speedX *= -1;
-          }
-          positionX += speedX;
-          box.css("left", positionX);
+        // Every time the box is clicked, call the handleBoxClick Function (see below)
+        document.getElementById("box").addEventListener("click", handleBoxClick);
+        
+        // Every (2nd argument) milliseconds, call the update Function (see below)
+        var updateInterval = setInterval(update, 1);
 
-          // updates the object in the Y direction
-          if (positionY + box.outerHeight() > board.height() || positionY < 0) {
-            speedY *= -1;
-          }
-          positionY += speedY;
-          box.css("top", positionY);
-        }
+        // randomizes the color of the selected html element
+        function randomizeColor(cssSelector) {
+          // color of the box
+          var tempcol1 = parseInt(Math.random() * 256);
+          var tempcol2 = parseInt(Math.random() * 256);
+          var tempcol3 = parseInt(Math.random() * 256);
 
-        function accuracyUpdate() {
-          accuracy.text("Accuracy: " + (Math.round(10000 * (points / totalClicks))) / 100 + "%");
-        }
-
-        /*
-        This Function will be called each time the board is clicked
-        */
-        function handleBoardClick() {
-          if (points === 0) { // change this
-            return;
-          }
-          else {
-            ++ totalClicks;
-          misses.text("Misses: " + (++ misClicks));
-          accuracyUpdate();
-          }
-        }
-
-        /* 
-        This Function will be called each time the box is clicked. Each time it is called,
-        it should increase the points total, increase the speed, and move the box to
-        the left side of the screen.
-        */
-        function handleBoxClick() {
-          // sets the position of the object to a random X and Y position every click done on the box
-          rngX = Math.random();
-          while (rngX > 1 - (box.outerWidth() / board.width())) {
-            rngX = Math.random();
-          }
-          rngY = Math.random();
-          while (rngY > 1 - (box.outerHeight() / board.height())) {
-            rngY = Math.random();
-          }
-          positionX = rngX * board.width();
-          positionY = rngY * board.height();
-
-          // adds a point and calculates speed
-          ++points;
-          speedX = 1 + speedFrame * parseInt(points / 3);
-          speedY = 1 + speedFrame * parseInt(points / 3);
-
-          // gives the object an opportunity to change direction every click
-          var temprngX = parseInt(Math.random() * 2);
-          if (temprngX % 2 === 0) {
-            speedX *= -1;
-          }
-          var temprngY = parseInt(Math.random() * 2);
-          if (temprngY % 2 === 0) {
-            speedY *= -1;
-          }
-
-          // randomizes the color of the box
-          tempcol1 = parseInt(Math.random() * 256);
-          tempcol2 = parseInt(Math.random() * 256);
-          tempcol3 = parseInt(Math.random() * 256);
+          // makes sure the color of the box is not the color of the background "bisque"
           while (tempcol1 === 255 && tempcol2 === 228 && tempcol3 === 196) {
             tempcol1 = parseInt(Math.random() * 256);
             tempcol2 = parseInt(Math.random() * 256);
             tempcol3 = parseInt(Math.random() * 256);
           }
-          box.css(
-            "background-color",
-            "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")"
-          );
+          $(cssSelector).css("background-color", "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")");
+        }
+
+        // moves the Box to a new position on the screen
+        function moveBoxTo(newPositionX, newPositionY) {
+          $(".box").css("left", newPositionX);
+          $(".box").css("top", newPositionY);
+        }
+
+        // randomizes the x and y location of the box element
+        function randomizeBoxLocation() {
+          // random number for position
+          var rngX = Math.random();
+          while (rngX > 1 - (boxWidth / boardWidth)) {
+            rngX = Math.random();
+          }
+          var rngY = Math.random();
+          while (rngY > 1 - (boxHeight / boardWidth)) {
+            rngY = Math.random()
+          }
+          positionX = rngX * boardWidth;
+          positionY = rngY * boardHeight;
+        }
+
+        /* 
+          this function will be called a lot of times/second. each time it is called,
+          it should move the box to a new location. if the box drifts off the screen
+          turn it around ! 
+        */
+        function update() {
+          // updates the object in the X direction
+          if (positionX + boxWidth > boardWidth || positionX < 0) {
+            speedX *= -1;
+          }
+          positionX += speedX;
+
+          // updates the object in the Y direction
+          if (positionY + boxHeight > boardHeight || positionY < 0) {
+            speedY *= -1;
+          }
+          positionY += speedY;
+
+          moveBoxTo(positionX, positionY);
+          boxCurrentX = parseFloat(window.getComputedStyle(document.getElementById("box")).left);
+          boxCurrentY = parseFloat(window.getComputedStyle(document.getElementById("box")).top);
+        }
+
+        // this function will be called each time the board is clicked
+        function handleBoardClick() {
+          if (event.pageX >= boxCurrentX && event.pageX <= boxCurrentX + boxWidth && event.pageY >= boxCurrentY && event.pageY <= boxCurrentY + boxHeight) {
+            accuracyUpdate();
+            return; // if the box is clicked nothing else will happen
+          }
+          $(".misses").text("Misses: " + (++ misClicks));
+          accuracyUpdate();          
+        }
+
+        // this function will be called each time the box is clicked
+        function handleBoxClick() {
+          // sets the position of the object to a random X and Y position every click done on the box
+          rngX = Math.random();
+          while (rngX > 1 - (boxWidth / boardWidth)) {
+            rngX = Math.random();
+          }
+          rngY = Math.random();
+          while (rngY > 1 - (boxHeight / boardHeight)) {
+            rngY = Math.random();
+          }
+          positionX = rngX * boardWidth;
+          positionY = rngY * boardHeight;
+
+          // adds a point and calculates speed
+          speed = speed + speedFrame * parseInt(++points / clicked);
+          speedX = speed;
+          speedY = speed;
+
+          // gives the object an opportunity to change direction every click
+          if (Math.round(Math.random()) === 0) {
+            speedX *= -1;
+          }
+          if (Math.round(Math.random()) === 0) {
+            speedY *= -1;
+          }
+
+          // randomizes the color of the box
+          randomizeColor(".box");
 
           // score element
-          score.text("Score: " + points);
-
-          --misClicks;
-          accuracyUpdate();
+          $(".score").text("Score: " + points);
+        }
+        
+        // updates the accuracy element
+        function accuracyUpdate() {
+          $(".accuracy").text("Accuracy: " + (Math.round(10000 * (points / (points + misClicks)))) / 100 + "%");
+          if (misClicks >= threshold) {
+            endGame();
+          }
         }
 
-        function startClick() {
-          document.getElementById("start").removeEventListener("click", startClick); // not necessary if the display is "none";
-          $("#start").css("display", "none");
-          $("#bounceScreen").css("display", "block");
-          boardClicks = board.on("click", handleBoardClick);
+        // ends the game after a certain amount of misclicks
+        function endGame() {
+          clearInterval(updateInterval);
+          // $(".board").removeEventListener("click", handleBoardClick);
+          // $(".box").removeEventListener("click", handleBoxClick);
+          document.getElementById("board").removeEventListener("click", handleBoardClick);
+          document.getElementById("box").removeEventListener("click", handleBoxClick);
         }
 
-        document.getElementById("start").addEventListener("click", startClick);
-
-        // $(".box").css("background-color", "black"); // some jQuery element manipulation with "$" selector
       })();
     </script>
   </body>
