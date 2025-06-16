@@ -5,31 +5,14 @@
     color: black;
 }
 
-.box {
-    width: var(--side);
-    height: var(--side);
-    background-color: rgb(255, 148, 172);
-    border: 1px solid black;
-
-    font-size: 300%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    user-select: none;
-    position: absolute;
-
-    /* Change me! */
-    top: 0px;
-    left: 0px;
-}
-
 .board {
     background-color: rgb(16, 70, 141);
     height: 100vh;
     padding: 0;
-    margin: 0 auto;
+    margin: 0;
 
+    overflow-x: hidden; /* deals with the scroll bar / content */
+    overflow-y: hidden; /* deals with the scroll bar / content */
     display: flexbox;
     /* justify-content: center; */
 }
@@ -46,18 +29,6 @@
 .auto {
     margin-left: 5%;
     align-self: center;
-}
-
-.score {
-    margin-left: 5%;
-}
-
-.misses {
-    margin-left: 5%;
-}
-
-.accuracy {
-    margin-left: 5%;
 }
 
 .list {
@@ -89,17 +60,21 @@
     color: black; /* color of the link texts */
 }
 
-#bounceScreen {
-    /* display: none; */
-}
+.box {
+    width: var(--side);
+    height: var(--side);
+    background-color: rgb(255, 148, 172);
+    border: 1px solid black;
 
-#start {
+    font-size: 300%;
     display: flex;
-    justify-self: center;
-    margin-top: 50vh;
+    justify-content: center;
+    align-items: center;
 
-    padding: 100px;
-    background-color: chartreuse;
-    color: purple;
-    border: 2px solid black;
+    user-select: none;
+    position: absolute;
+
+    /* Change me! */
+    top: 0px;
+    left: 0px;
 }

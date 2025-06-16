@@ -49,7 +49,7 @@
         var misClicks = 0; // amount of misclicks
         var threshold = 10; // amount of misclicks for the game to end
         var clicked = 3; // how many box clicks does it take before the speed changes
-        var speedFrame = 1; // speed change every clicked clicks
+        var speedFrame = 1/2; // speed change every clicked clicks
         
         // speeds
         var speed = 1;
@@ -65,14 +65,20 @@
         var boxCurrentX;
         var boxCurrentY;
 
-        // Every time the board is clicked, call the handleBoardClick Function (see below)
+        // every (2nd argument) milliseconds, call the update Function
+        var updateInterval = setInterval(update, 1);
+
+        // be able to switch the handle clicks
+        var action = false;
+
+        // every time the board is clicked, call the handleBoardClick function
         document.getElementById("board").addEventListener("click", handleBoardClick);
 
-        // Every time the box is clicked, call the handleBoxClick Function (see below)
+        // every time the navi bar is clicked, call the handleNaviClick function
+        document.getElementById("navigation").addEventListener("click", handleNaviClick)
+
+        // every time the box is clicked, call the handleBoxClick function
         document.getElementById("box").addEventListener("click", handleBoxClick);
-        
-        // Every (2nd argument) milliseconds, call the update Function (see below)
-        var updateInterval = setInterval(update, 1);
 
         // randomizes the color of the selected html element
         function randomizeColor(cssSelector) {
@@ -136,16 +142,23 @@
 
         // this function will be called each time the board is clicked
         function handleBoardClick() {
-          if (event.pageX >= boxCurrentX && event.pageX <= boxCurrentX + boxWidth && event.pageY >= boxCurrentY && event.pageY <= boxCurrentY + boxHeight) {
-            accuracyUpdate();
-            return; // if the box is clicked nothing else will happen
+          if (action) {
+            action = false;
+            return;
           }
           $(".misses").text("Misses: " + (++ misClicks));
           accuracyUpdate();          
         }
 
+        // if navi bar is clicked don't do anything else
+        function handleNaviClick() {
+          action = true;
+        }
+
         // this function will be called each time the box is clicked
         function handleBoxClick() {
+          // box clicked
+          action = true;
           // sets the position of the object to a random X and Y position every click done on the box
           rngX = Math.random();
           while (rngX > 1 - (boxWidth / boardWidth)) {
@@ -176,6 +189,7 @@
 
           // score element
           $(".score").text("Score: " + points);
+          accuracyUpdate();
         }
         
         // updates the accuracy element
