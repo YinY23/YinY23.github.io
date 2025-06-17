@@ -8,6 +8,11 @@
     <script type="text/javascript" src="jquery.min.js"></script>
   </head>
   <body class="board" id="board">
+    <div class="startScreen">
+      <button class="button" id="easyMode"> Easy </button>
+      <button class="button" id="normalMode"> Normal </button>
+      <button class="button" id="hardMode"> Hard </button>
+    </div>
     <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
       <!-- Nav bar -->
@@ -19,7 +24,7 @@
         <div class="misses auto">Misses: 0</div>
 
         <!-- HTML for the accuracy -->
-        <div class="accuracy auto">Accuracy: 100%</div>
+        <div class="accuracy auto">Accuracy: n/a</div>
         
         <!-- Links list -->
         <ul class="list">
@@ -37,39 +42,43 @@
     </div>
     <script>
       (function () {
-        // width and height of the board
+        // width and height of the board (accessor only)
         var boardWidth = parseFloat(window.getComputedStyle(document.getElementById("board")).width);
         var boardHeight = parseFloat(window.getComputedStyle(document.getElementById("board")).height);
 
-        // width and height of the box
+        // width and height of the box (accessor only)
         var boxWidth = parseFloat(window.getComputedStyle(document.getElementById("box")).width);
         var boxHeight = parseFloat(window.getComputedStyle(document.getElementById("box")).height);
 
         var points = 0; // points used for score and speed calculation
         var misClicks = 0; // amount of misclicks
-        var threshold = 10; // amount of misclicks for the game to end
-        var clicked = 3; // how many box clicks does it take before the speed changes
-        var speedFrame = 1/2; // speed change every clicked clicks
+        var threshold; // amount of misclicks for the game to end
+        var clicked; // how many box clicks does it take before the speed changes
+        var speedFrame; // speed change every clicked clicks
         
-        // speeds
-        var speed = 1;
-        var speedX = speed;
-        var speedY = speed;
+        // speed declaration
+        var speed;
+        var speedX;
+        var speedY;
 
         // box's position in the x and y direction
         var positionX;
         var positionY;
-        randomizeBoxLocation();
 
         // box's current x and y direction after every update
         var boxCurrentX;
         var boxCurrentY;
 
         // every (2nd argument) milliseconds, call the update Function
-        var updateInterval = setInterval(update, 1);
+        var updateInterval;
 
         // be able to switch the handle clicks
         var action = false;
+
+        // buttons pregame
+        document.getElementById("easyMode").addEventListener("click", handleEasyButtonClick);
+        document.getElementById("normalMode").addEventListener("click", handleNormalButtonClick);
+        document.getElementById("hardMode").addEventListener("click", handleHardButtonClick);
 
         // every time the board is clicked, call the handleBoardClick function
         document.getElementById("board").addEventListener("click", handleBoardClick);
@@ -110,11 +119,70 @@
             rngX = Math.random();
           }
           var rngY = Math.random();
-          while (rngY > 1 - (boxHeight / boardWidth)) {
+          while (rngY > 1 - (boxHeight / boardWidth) || rngY <= (boxHeight / boardHeight)) {
             rngY = Math.random()
           }
           positionX = rngX * boardWidth;
           positionY = rngY * boardHeight;
+        }
+
+        // gives the box a speed of speedInput
+        function boxSpeed(speedInput) {
+          speed = speedInput
+          speedX = speed;
+          speedY = speed;
+        }
+
+        // gives the box a random velocity for the x and y direction
+        function randomVelocity() {
+          if (Math.round(Math.random()) === 1) {
+            speedX *= -1;
+          }
+          if (Math.round(Math.random()) === 1) {
+            speedY *= -1;
+          }
+        }
+
+        function initialization(boxsSpeed, tempThreshold, howManyClicksBeforeSpeedChange, speedChangePerthreshold) {
+          randomizeBoxLocation();
+          boxSpeed(boxsSpeed);
+          randomVelocity();
+          threshold = tempThreshold;
+          clicked = howManyClicksBeforeSpeedChange;
+          speedFrame = speedChangePerthreshold;
+        }
+
+        // the function call when the easy button is clicked
+        function handleEasyButtonClick() {
+          action = true;
+          $(".startScreen").css("display", "none");
+          
+          initialization(1, 15, 5, 1/2);
+          updateInterval = setInterval(update, 1);
+
+          $(".main").css("display", "block");
+        }
+
+        // the function call when the normal button is clicked
+        function handleNormalButtonClick() {
+          action = true;
+          $(".startScreen").css("display", "none");
+
+          initialization(3, 10, 3, 1);
+          updateInterval = setInterval(update, 1);
+
+          $(".main").css("display", "block");
+        }
+
+        // the function call when the hard button is clicked
+        function handleHardButtonClick() {
+          action = true;
+          $(".startScreen").css("display", "none");
+
+          initialization(5, 5, 1, 5);
+          updateInterval = setInterval(update, 1);
+
+          $(".main").css("display", "block");
         }
 
         /* 
@@ -130,7 +198,7 @@
           positionX += speedX;
 
           // updates the object in the Y direction
-          if (positionY + boxHeight > boardHeight || positionY < 0) {
+          if (positionY + boxHeight > boardHeight || positionY < parseFloat(window.getComputedStyle(document.getElementById("navigation")).height)) {
             speedY *= -1;
           }
           positionY += speedY;
@@ -172,17 +240,11 @@
           positionY = rngY * boardHeight;
 
           // adds a point and calculates speed
-          speed = speed + speedFrame * parseInt(++points / clicked);
-          speedX = speed;
-          speedY = speed;
+          speed = speed + (speedFrame * parseInt(++points / clicked));
+          boxSpeed(speed);
 
           // gives the object an opportunity to change direction every click
-          if (Math.round(Math.random()) === 0) {
-            speedX *= -1;
-          }
-          if (Math.round(Math.random()) === 0) {
-            speedY *= -1;
-          }
+          randomVelocity();
 
           // randomizes the color of the box
           randomizeColor(".box");

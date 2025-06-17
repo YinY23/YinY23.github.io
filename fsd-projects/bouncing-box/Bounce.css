@@ -14,7 +14,23 @@
     overflow-x: hidden; /* deals with the scroll bar / content */
     overflow-y: hidden; /* deals with the scroll bar / content */
     display: flexbox;
-    /* justify-content: center; */
+}
+
+.startScreen {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.button {
+    width: 200px;
+    height: 200px;
+    align-self: center;
+}
+
+.main {
+    display: none;
 }
 
 .navigation {
