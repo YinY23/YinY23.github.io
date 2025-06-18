@@ -9,9 +9,33 @@
   </head>
   <body class="board" id="board">
     <div class="startScreen">
-      <button class="button" id="easyMode"> Easy </button>
-      <button class="button" id="normalMode"> Normal </button>
-      <button class="button" id="hardMode"> Hard </button>
+      <div class="info" id="easyInfo">
+        <button class="button" id="easyMode"> Easy </button>
+        <ul class="infoList">
+          <li>
+            <p> Easy Mode ! </p>
+          </li>
+          <li>
+            <p> stuff </p>
+          </li>
+        </ul>
+      </div>
+      <div class="info" id="normalInfo">
+        <button class="button" id="normalMode"> Normal </button>
+        <ul class="infoList">
+          <li>
+            <p> Normal Mode ! </p>
+          </li>
+        </ul>
+      </div>
+      <div class="info" id="hardInfo">
+        <button class="button" id="hardMode"> Hard </button>
+        <ul class="infoList">
+          <li>
+            <p> Hard Mode ! </p>
+          </li>
+        </ul>
+      </div>
     </div>
     <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
@@ -47,8 +71,8 @@
         var boardHeight = parseFloat(window.getComputedStyle(document.getElementById("board")).height);
 
         // width and height of the box (accessor only)
-        var boxWidth = parseFloat(window.getComputedStyle(document.getElementById("box")).width);
-        var boxHeight = parseFloat(window.getComputedStyle(document.getElementById("box")).height);
+        var boxWidth;
+        var boxHeight;
 
         var points = 0; // points used for score and speed calculation
         var misClicks = 0; // amount of misclicks
@@ -80,14 +104,13 @@
         document.getElementById("normalMode").addEventListener("click", handleNormalButtonClick);
         document.getElementById("hardMode").addEventListener("click", handleHardButtonClick);
 
-        // every time the board is clicked, call the handleBoardClick function
-        document.getElementById("board").addEventListener("click", handleBoardClick);
-
-        // every time the navi bar is clicked, call the handleNaviClick function
-        document.getElementById("navigation").addEventListener("click", handleNaviClick)
-
-        // every time the box is clicked, call the handleBoxClick function
-        document.getElementById("box").addEventListener("click", handleBoxClick);
+        // sets the box's side sizes
+        function boxSize(side) {
+          $(".box").css("width", side + "px");
+          boxWidth = parseFloat(window.getComputedStyle(document.getElementById("box")).width);
+          $(".box").css("height", side + "px");
+          boxHeight = parseFloat(window.getComputedStyle(document.getElementById("box")).height);
+        }
 
         // randomizes the color of the selected html element
         function randomizeColor(cssSelector) {
@@ -143,46 +166,45 @@
           }
         }
 
-        function initialization(boxsSpeed, tempThreshold, howManyClicksBeforeSpeedChange, speedChangePerthreshold) {
+        // changes everything that can affect the game play (for the different modes)
+        function initialization(side, boxsSpeed, tempThreshold, howManyClicksBeforeSpeedChange, speedChangePerthreshold) {
+          action = true;
+          $(".startScreen").css("display", "none");
+
+          boxSize(side);
           randomizeBoxLocation();
           boxSpeed(boxsSpeed);
           randomVelocity();
           threshold = tempThreshold;
           clicked = howManyClicksBeforeSpeedChange;
           speedFrame = speedChangePerthreshold;
+          $(".main").css("display", "block");
+
+          // every time the board is clicked, call the handleBoardClick function
+          document.getElementById("board").addEventListener("click", handleBoardClick);
+
+          // every time the navi bar is clicked, call the handleNaviClick function
+          document.getElementById("navigation").addEventListener("click", handleNaviClick)
+
+          // every time the box is clicked, call the handleBoxClick function
+          document.getElementById("box").addEventListener("click", handleBoxClick);
+
+          updateInterval = setInterval(update, 1);
         }
 
         // the function call when the easy button is clicked
         function handleEasyButtonClick() {
-          action = true;
-          $(".startScreen").css("display", "none");
-          
-          initialization(1, 15, 5, 1/2);
-          updateInterval = setInterval(update, 1);
-
-          $(".main").css("display", "block");
+          initialization("150", 1, 15, 5, 1/2);
         }
 
         // the function call when the normal button is clicked
         function handleNormalButtonClick() {
-          action = true;
-          $(".startScreen").css("display", "none");
-
-          initialization(3, 10, 3, 1);
-          updateInterval = setInterval(update, 1);
-
-          $(".main").css("display", "block");
+          initialization("80", 3, 10, 3, 1);
         }
 
         // the function call when the hard button is clicked
         function handleHardButtonClick() {
-          action = true;
-          $(".startScreen").css("display", "none");
-
-          initialization(5, 5, 1, 5);
-          updateInterval = setInterval(update, 1);
-
-          $(".main").css("display", "block");
+          initialization("50", 5, 5, 1, 5);
         }
 
         /* 
@@ -227,7 +249,7 @@
         function handleBoxClick() {
           // box clicked
           action = true;
-          // sets the position of the object to a random X and Y position every click done on the box
+          // sets the position of the object to a random x and y position every click done on the box
           rngX = Math.random();
           while (rngX > 1 - (boxWidth / boardWidth)) {
             rngX = Math.random();
