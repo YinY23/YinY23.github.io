@@ -9,33 +9,7 @@
   </head>
   <body class="board" id="board">
     <div class="startScreen">
-      <div class="info" id="easyInfo">
-        <button class="button" id="easyMode"> Easy </button>
-        <ul class="infoList">
-          <li>
-            <p> Easy Mode ! </p>
-          </li>
-          <li>
-            <p> stuff </p>
-          </li>
-        </ul>
-      </div>
-      <div class="info" id="normalInfo">
-        <button class="button" id="normalMode"> Normal </button>
-        <ul class="infoList">
-          <li>
-            <p> Normal Mode ! </p>
-          </li>
-        </ul>
-      </div>
-      <div class="info" id="hardInfo">
-        <button class="button" id="hardMode"> Hard </button>
-        <ul class="infoList">
-          <li>
-            <p> Hard Mode ! </p>
-          </li>
-        </ul>
-      </div>
+      <button id="startButton"> start game </button>
     </div>
     <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
@@ -63,6 +37,10 @@
 
       <!-- HTML for the box -->
       <div class="box" id="box"></div>
+    </div>
+    <div class="endScreen" id="endScreen">
+      <p> you lost ! </p>
+      <button id="endButton"> end game ! </button>
     </div>
     <script>
       (function () {
@@ -100,9 +78,7 @@
         var action = false;
 
         // buttons pregame
-        document.getElementById("easyMode").addEventListener("click", handleEasyButtonClick);
-        document.getElementById("normalMode").addEventListener("click", handleNormalButtonClick);
-        document.getElementById("hardMode").addEventListener("click", handleHardButtonClick);
+        document.getElementById("startButton").addEventListener("click", handleStartButtonClick);
 
         // sets the box's side sizes
         function boxSize(side) {
@@ -191,6 +167,8 @@
 
           updateInterval = setInterval(update, 1);
         }
+
+        
 
         // the function call when the easy button is clicked
         function handleEasyButtonClick() {
@@ -287,10 +265,29 @@
         // ends the game after a certain amount of misclicks
         function endGame() {
           clearInterval(updateInterval);
-          // $(".board").removeEventListener("click", handleBoardClick);
-          // $(".box").removeEventListener("click", handleBoxClick);
           document.getElementById("board").removeEventListener("click", handleBoardClick);
           document.getElementById("box").removeEventListener("click", handleBoxClick);
+          endScreen();
+        }
+
+        function endScreen() {
+          $(".endScreen").css("display", "block");
+          $(".endScreen").css("top", ((boardHeight - parseFloat(window.getComputedStyle(document.getElementById("endScreen")).height)) / 2));
+          $(".endScreen").css("left", ((boardWidth - parseFloat(window.getComputedStyle(document.getElementById("endScreen")).width)) / 2));
+          document.getElementById("endButton").addEventListener("click", handleEndButton);
+        }
+
+        function handleEndButton() {
+          $(".main").css("display", "none");
+          $(".endScreen").css("display", "none");
+          
+          points = 0;
+          misClicks = 0;
+          $(".score").text("Score: 0");
+          $(".misses").text("Misses: 0");
+          $(".accuracy").text("Accuracy: n/a");
+
+          $(".startScreen").css("display", "flex");
         }
 
       })();

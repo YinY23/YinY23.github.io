@@ -31,6 +31,12 @@
     width: 300px;
     height: 150px;
     margin: 5px;
+
+    color: maroon;
+    background: lightskyblue;
+    font-size: 200%;
+    font-family: Times New Roman;
+    border: none;
 }
 
 #easyInfo {
@@ -109,4 +115,28 @@
     /* Change me! */
     top: 0px;
     left: 0px;
+}
+
+.endScreen {
+    display: none;
+    width: 600px;
+    height: 200px;
+    background-color: cyan;
+
+    position: absolute;
+
+    justify-items: center;
+
+    overflow-y: hidden;
+}
+
+#endButton {
+    width: 300px;
+    height: 100px;
+
+
+    background-color: orange;
+    border: 2px solid pink;
+    font-size: 150%;
+    font-family: impact;
 }
