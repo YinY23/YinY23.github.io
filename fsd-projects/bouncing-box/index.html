@@ -9,7 +9,47 @@
   </head>
   <body class="board" id="board">
     <div class="startScreen">
-      <button id="startButton"> start game </button>
+      <div id="gameSettings">
+        <div class="settings" id="sizeDiv">
+          <div class="modifiers">
+            <p> Size </p>
+            <div class="changeDiv" id="sizeDecrease"> - </div>
+            <div class="changeDiv" id="sizeIncrease"> + </div>
+          </div>
+          <div class="difficulty" id="sizeBars">
+            <div class="levels"></div>
+            <div class="levels"></div>
+            <div class="levels"></div>
+          </div>
+        </div>
+        <div class="settings" id="speedDiv">
+          <div class="modifiers">
+            <p> Speed </p>
+            <div class="changeDiv" id="speedDecrease"> - </div>
+            <div class="changeDiv" id="speedIncrease"> + </div>
+          </div>
+          <div class="difficulty" id="speedBars">
+            <div class="levels"></div>
+            <div class="levels"></div>
+            <div class="levels"></div>
+          </div>
+        </div>
+        <div class="settings" id="boxDiv">
+          <div class="modifiers">
+            <p> Boxes </p>
+            <div class="changeDiv" id="boxDecrease"> - </div>
+            <div class="changeDiv" id="boxIncrease"> + </div>
+          </div>
+          <div class="difficulty" id="boxBars">
+            <div class="levels"></div>
+            <div class="levels"></div>
+            <div class="levels"></div>
+          </div>
+        </div>
+      </div>
+      <div id="startDiv">
+        <button id="startButton"> start game </button>
+      </div>
     </div>
     <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
@@ -77,14 +117,41 @@
         // be able to switch the handle clicks
         var action = false;
 
+        // arrays for levels
+        var sizearr = [];
+        childrens("sizeBars", sizearr);
+        var speedarr = [];
+        childrens("speedBars", speedarr);
+        var boxesarr = [];
+        childrens("boxBars", boxesarr);
+
         // buttons pregame
-        document.getElementById("startButton").addEventListener("click", handleStartButtonClick);
+        divClicker("sizeDecrease", "click", handleSizeDecrease);
+        divClicker("sizeIncrease", "click", handleSizeIncrease);
+        divClicker("speedDecrease", "click", handleSpeedDecrease);
+        divClicker("speedIncrease", "click", handleSpeedIncrease);
+        divClicker("boxDecrease", "click", handleBoxDecrease);
+        divClicker("boxIncrease", "click", handleBoxIncrease);
+        divClicker("startButton", "click", handleStartButtonClick);
+
+        // helper function to add event listeners
+        function divClicker(idlabel, eventType, functioncall) {
+          document.getElementById(idlabel).addEventListener(eventType, functioncall);
+        }
+
+        // makes an array containing all child elements of the parent element
+        function childrens(parentElement, arr) {
+          for (i = 0; i < document.getElementById(parentElement).children.length; i++) {
+            arr.push(document.getElementById(parentElement).children[i]);
+          }
+        }
 
         // sets the box's side sizes
-        function boxSize(side) {
-          $(".box").css("width", side + "px");
+        function boxSize() {
+          var side = 20 * sizearr.length;
+          $(".box").css("width", String(side) + "px");
           boxWidth = parseFloat(window.getComputedStyle(document.getElementById("box")).width);
-          $(".box").css("height", side + "px");
+          $(".box").css("height", String(side) + "px");
           boxHeight = parseFloat(window.getComputedStyle(document.getElementById("box")).height);
         }
 
@@ -126,8 +193,8 @@
         }
 
         // gives the box a speed of speedInput
-        function boxSpeed(speedInput) {
-          speed = speedInput
+        function boxSpeed() {
+          speed = speedarr.length;
           speedX = speed;
           speedY = speed;
         }
@@ -143,13 +210,13 @@
         }
 
         // changes everything that can affect the game play (for the different modes)
-        function initialization(side, boxsSpeed, tempThreshold, howManyClicksBeforeSpeedChange, speedChangePerthreshold) {
+        function initialization(tempThreshold, howManyClicksBeforeSpeedChange, speedChangePerthreshold) {
           action = true;
           $(".startScreen").css("display", "none");
 
-          boxSize(side);
+          boxSize();
           randomizeBoxLocation();
-          boxSpeed(boxsSpeed);
+          boxSpeed();
           randomVelocity();
           threshold = tempThreshold;
           clicked = howManyClicksBeforeSpeedChange;
@@ -168,21 +235,54 @@
           updateInterval = setInterval(update, 1);
         }
 
-        
-
-        // the function call when the easy button is clicked
-        function handleEasyButtonClick() {
-          initialization("150", 1, 15, 5, 1/2);
+        function handleSizeDecrease() {
+          if (sizearr.length > 1) {
+            document.getElementById("sizeBars").removeChild(sizearr.pop());
+          }
         }
 
-        // the function call when the normal button is clicked
-        function handleNormalButtonClick() {
-          initialization("80", 3, 10, 3, 1);
+        function handleSizeIncrease() {
+          if (sizearr.length < 5) {
+            var temp = document.createElement("div");
+            temp.classList.add("levels");
+            document.getElementById("sizeBars").appendChild(temp);
+            sizearr.push(temp);
+          }
         }
 
-        // the function call when the hard button is clicked
-        function handleHardButtonClick() {
-          initialization("50", 5, 5, 1, 5);
+        function handleSpeedDecrease() {
+          if (speedarr.length > 1) {
+            document.getElementById("speedBars").removeChild(speedarr.pop());
+          }
+        }
+
+        function handleSpeedIncrease() {
+          if (speedarr.length < 5) {
+            var temp = document.createElement("div");
+            temp.classList.add("levels");
+            document.getElementById("speedBars").appendChild(temp);
+            speedarr.push(temp);
+          }
+        }
+
+        function handleBoxDecrease() {
+          if (boxesarr.length > 1) {
+            document.getElementById("boxBars").removeChild(boxesarr.pop());
+          }
+        }
+
+        function handleBoxIncrease() {
+          if (boxesarr.length < 5) {
+            var temp = document.createElement("div");
+            temp.classList.add("levels");
+            document.getElementById("boxBars").appendChild(temp);
+            boxesarr.push(temp);
+          }
+        }
+
+        // start game button
+        function handleStartButtonClick() {
+          initialization(10, 3, 1/2);
         }
 
         /* 
@@ -286,6 +386,12 @@
           $(".score").text("Score: 0");
           $(".misses").text("Misses: 0");
           $(".accuracy").text("Accuracy: n/a");
+
+          while (sizearr.length > 3) {
+            handleSizeDecrease();
+            handleSpeedDecrease();
+            handleBoxDecrease();
+          }
 
           $(".startScreen").css("display", "flex");
         }

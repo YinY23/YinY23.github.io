@@ -13,42 +13,84 @@
 
     overflow-x: hidden; /* deals with the scroll bar / content */
     overflow-y: hidden; /* deals with the scroll bar / content */
-    display: flexbox;
 }
 
 .startScreen {
-    background-color: bisque;
     display: flex;
-    justify-content: center;
     height: 100%;
+    width: 100%;
+    background-color: bisque;
 }
 
-.info {
-    margin: 5%;
+#gameSettings {
+    width: 80%;
+    height: 100%;
+    align-content: center;
 }
 
-.button {
-    width: 300px;
-    height: 150px;
-    margin: 5px;
-
-    color: maroon;
-    background: lightskyblue;
-    font-size: 200%;
-    font-family: Times New Roman;
-    border: none;
+.settings {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 20%;
 }
 
-#easyInfo {
-    background-color:red;
+#sizeDiv {
+    background-color: orange;
 }
 
-#normalInfo {
+#speedDiv {
+    background-color: pink;
+}
+
+#boxDiv {
     background-color: green;
 }
 
-#hardInfo {
-    background-color: blue;
+.modifiers {
+    display: flex;
+    align-items: center;
+}
+
+.changeDiv {
+    width: 50px;
+    height: 50px;
+    font-size: 150%;
+    text-align: center;
+    margin-left: 50px;
+    background-color: white;
+}
+
+.difficulty {
+    display: flex;
+    width: 20%;
+    height: 100px;
+    border: 5px solid black;
+    align-items: center;
+}
+
+.levels {
+    width: 20%;
+    height: 80%;
+    margin: 1%;
+    background-color: black;
+}
+
+#startDiv {
+    display: flex;
+    width: 30%;
+    height: 100%;
+}
+
+#startButton {
+    width: 300px;
+    height: 200px;
+    background-color: green;
+    border: none;
+    font-size: 150%;
+    font-family: fantasy;
+    color: pink;
+
+    margin: auto;
 }
 
 .main {
