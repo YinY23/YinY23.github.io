@@ -1,0 +1,33 @@
+navigation {
+    display: flex;
+    width: 100%;
+    height: auto;
+
+    left: 0;
+    top: 0;
+}
+
+#list {
+    background-color: green;
+    display: flex;
+    justify-content: right;
+
+    list-style-type: none;
+}
+
+.listitems {
+    display: flex;
+    justify-content: center;
+    margin-right: 1%;
+    width: 80px;
+    height: 40px;
+    background-color: bisque;
+    border: 1px solid black;
+    border-radius: 20%;
+}
+
+a {
+    align-self: center;
+    text-decoration: none;
+    color: cyan;
+}

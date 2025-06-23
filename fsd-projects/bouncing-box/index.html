@@ -8,38 +8,80 @@
     <script type="text/javascript" src="jquery.min.js"></script>
   </head>
   <body class="board" id="board">
+    <!-- Nav bar -->
+    <nav class="navigation" id="navigation">
+
+      <!-- HTML for the score -->
+      <div class="score auto">Score: 0</div>
+
+      <!-- HTML for the misses -->
+      <div class="misses auto">Misses: 0</div>
+
+      <!-- HTML for the accuracy -->
+      <div class="accuracy auto">Accuracy: n/a</div>
+      
+      <!-- Links list -->
+      <ul class="list">
+        <li class="links">
+          <a href="/index.html"> Home </a>
+        </li>
+        <li class="links">
+          <a href="/portfolio.html"> Portfolio </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- pregame interface -->
     <div class="startScreen">
       <div id="gameSettings">
+
+        <!-- ingame box size -->
         <div class="settings" id="sizeDiv">
+
+          <!-- div for the size difficulty modifier -->
           <div class="modifiers">
             <p> Size </p>
             <div class="changeDiv" id="sizeDecrease"> - </div>
             <div class="changeDiv" id="sizeIncrease"> + </div>
           </div>
+
+          <!-- the visuals for the size level difficulty -->
           <div class="difficulty" id="sizeBars">
             <div class="levels"></div>
             <div class="levels"></div>
             <div class="levels"></div>
           </div>
         </div>
+
+        <!-- ingame box speed -->
         <div class="settings" id="speedDiv">
+
+          <!-- div for the speed difficulty modifier -->
           <div class="modifiers">
             <p> Speed </p>
             <div class="changeDiv" id="speedDecrease"> - </div>
             <div class="changeDiv" id="speedIncrease"> + </div>
           </div>
+
+          <!-- the visuals for the speed difficulty -->
           <div class="difficulty" id="speedBars">
             <div class="levels"></div>
             <div class="levels"></div>
             <div class="levels"></div>
           </div>
         </div>
+
+        <!-- amount of boxes in game -->
         <div class="settings" id="boxDiv">
+
+          <!-- div for the boxes difficulty modifier -->
           <div class="modifiers">
             <p> Boxes </p>
             <div class="changeDiv" id="boxDecrease"> - </div>
             <div class="changeDiv" id="boxIncrease"> + </div>
           </div>
+
+          <!-- the visuals for the boxes difficulty -->
           <div class="difficulty" id="boxBars">
             <div class="levels"></div>
             <div class="levels"></div>
@@ -47,39 +89,27 @@
           </div>
         </div>
       </div>
+
+      <!-- div for the start button -->
       <div id="startDiv">
         <button id="startButton"> start game </button>
       </div>
     </div>
+
     <!-- Every element in the bouncing box -->
     <div class="main" id="bounceScreen">
-      <!-- Nav bar -->
-      <nav class="navigation" id="navigation">
-        <!-- HTML for the score -->
-        <div class="score auto">Score: 0</div>
-
-        <!-- HTML for the misses -->
-        <div class="misses auto">Misses: 0</div>
-
-        <!-- HTML for the accuracy -->
-        <div class="accuracy auto">Accuracy: n/a</div>
-        
-        <!-- Links list -->
-        <ul class="list">
-          <li class="links">
-            <a href="/index.html"> Home </a>
-          </li>
-          <li class="links">
-            <a href="/portfolio.html"> Portfolio </a>
-          </li>
-        </ul>
-      </nav>
 
       <!-- HTML for the box -->
-      <div class="box" id="box"></div>
+      <div class="allbox" >
+        <div class="box" id="box"></div>
+      </div>
     </div>
+
+    <!-- the ending screen when the user misses enough times -->
     <div class="endScreen" id="endScreen">
       <p> you lost ! </p>
+
+      <!-- clickable button to restart the game -->
       <button id="endButton"> end game ! </button>
     </div>
     <script>
@@ -133,6 +163,8 @@
         divClicker("boxDecrease", "click", handleBoxDecrease);
         divClicker("boxIncrease", "click", handleBoxIncrease);
         divClicker("startButton", "click", handleStartButtonClick);
+
+        const starter = sizearr.length;
 
         // helper function to add event listeners
         function divClicker(idlabel, eventType, functioncall) {
@@ -377,6 +409,34 @@
           document.getElementById("endButton").addEventListener("click", handleEndButton);
         }
 
+        // sets the difficulty to the default mode
+        function levelsReset(start) {
+          while (sizearr.length !== start) {
+            if (sizearr.length > start) {
+              handleSizeDecrease();
+            }
+            else if (sizearr.length < start) {
+              handleSizeIncrease();
+            }
+          }
+          while (speedarr.length !== start) {
+            if (speedarr.length > start) {
+              handleSpeedDecrease();
+            }
+            else if (speedarr.length < start) {
+              handleSpeedIncrease();
+            }
+          }
+          while (boxesarr.length !== start) {
+            if (boxesarr.length > start) {
+              handleBoxDecrease();
+            }
+            else if (boxesarr.length < start) {
+              handleBoxIncrease();
+            }
+          }
+        }
+
         function handleEndButton() {
           $(".main").css("display", "none");
           $(".endScreen").css("display", "none");
@@ -387,11 +447,7 @@
           $(".misses").text("Misses: 0");
           $(".accuracy").text("Accuracy: n/a");
 
-          while (sizearr.length > 3) {
-            handleSizeDecrease();
-            handleSpeedDecrease();
-            handleBoxDecrease();
-          }
+          levelsReset(starter);
 
           $(".startScreen").css("display", "flex");
         }
