@@ -25,6 +25,7 @@
 }
 
 .auto {
+    display: none;
     margin-left: 5%;
     align-self: center;
 }
