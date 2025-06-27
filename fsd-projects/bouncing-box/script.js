@@ -1,10 +1,5 @@
 (function () {
   
-  // helper function to add event listeners
-  function divClicker(idlabel, eventType, functioncall) {
-    document.getElementById(idlabel).addEventListener(eventType, functioncall);
-  }
-
   // arrays for levels
   var sizearr = childrens("sizeBars", sizearr);
   var speedarr = childrens("speedBars", speedarr);
@@ -22,6 +17,11 @@
   divClicker("boxIncrease", "click", handleBoxIncrease);
   divClicker("startButton", "click", handleStartButtonClick);
 
+  // helper function to add event listeners
+  function divClicker(idlabel, eventType, functioncall) {
+    document.getElementById(idlabel).addEventListener(eventType, functioncall);
+  }
+
   // makes an array containing all child elements of the parent element
   function childrens(parentElement, arr) {
     var arr = [];
@@ -31,12 +31,14 @@
     return arr;
   }
 
+  // decreases the visual level indicator for the size difficulty
   function handleSizeDecrease() {
     if (sizearr.length > 1) {
       document.getElementById("sizeBars").removeChild(sizearr.pop());
     }
   }
 
+  // increases the visual level indicator for the size difficulty
   function handleSizeIncrease() {
     if (sizearr.length < 5) {
       var temp = document.createElement("div");
@@ -46,12 +48,14 @@
     }
   }
 
+  // decreases the visual level indicator for the speed difficulty
   function handleSpeedDecrease() {
     if (speedarr.length > 1) {
       document.getElementById("speedBars").removeChild(speedarr.pop());
     }
   }
 
+  // increases the visual level indicator for the speed difficulty
   function handleSpeedIncrease() {
     if (speedarr.length < 5) {
       var temp = document.createElement("div");
@@ -61,12 +65,14 @@
     }
   }
 
+  // decreases the visual level indicator for the box difficulty
   function handleBoxDecrease() {
     if (boxesarr.length > 1) {
       document.getElementById("boxBars").removeChild(boxesarr.pop());
     }
   }
 
+  // increases the visual level indicator for the box difficulty
   function handleBoxIncrease() {
     if (boxesarr.length < 5) {
       var temp = document.createElement("div");
@@ -78,7 +84,7 @@
   
   // start game button
   function handleStartButtonClick() {
-    initialization(10, 3, 1/5);
+    initialization(10, 3, 1/3);
   }
   
   // changes everything that can affect the game play (for the different modes)
@@ -88,7 +94,7 @@
 
     for (i = 0; i < boxesarr.length; i++) {
       addBoxes();
-      document.getElementById(boxessarr[i].idSelector).addEventListener("click", handleBoxClick);
+      document.getElementById(boxessarr[i].id).addEventListener("click", handleBoxClick);
       boxSize(boxessarr[i]);
       randomizeColor(boxessarr[i]);
       boxSpeed(boxessarr[i]);
@@ -97,6 +103,7 @@
     threshold = tempThreshold;
     clicked = howManyClicksBeforeSpeedChange;
     speedFrame = speedChangePerthreshold;
+
     $(".auto").css("display", "flex");
     $(".main").css("display", "block");
 
@@ -112,6 +119,7 @@
   // width and height of the board (accessor only)
   var boardWidth = parseFloat(window.getComputedStyle(document.getElementById("board")).width);
   var boardHeight = parseFloat(window.getComputedStyle(document.getElementById("board")).height);
+  var boardColor = window.getComputedStyle(document.getElementById("board")).backgroundColor;
 
   // be able to switch the handle clicks
   var action = false;
@@ -122,24 +130,23 @@
   var clicked; // how many box clicks does it take before the speed changes
   var speedFrame; // speed change every clicked clicks
   
-  // array containing all of the boxes as objects
-  var boxessarr = [
-    
-  ];
+  var boxessarr = []; // array containing all of the boxes as objects
 
-  // every millisecond, calls the update Function
-  var updateInterval;
+  var updateInterval; // updateInterval variable that is called
 
+  // adds a box html element into the game and its associated object
   function addBoxes() {
-    var tempBox = document.createElement("div"); // actual html element of box
+    // actual html element of the box
+    var tempBox = document.createElement("div");
     tempBox.classList.add("box", "box" + boxessarr.length);
     tempBox.id = "box" + boxessarr.length;
     document.getElementById("allbox").appendChild(tempBox);
-    var uniqueBoxClass = { // object
-      index: boxessarr.length, // index of object in boxessarr
-      id: "#box" + boxessarr.length,
-      idSelector: "box" + boxessarr.length,
-      class: ".box" + boxessarr.length, // class identifier
+
+    // object associated with the html element
+    var uniqueBoxClass = {
+      id: "box" + boxessarr.length,
+      idSelector: "#box" + boxessarr.length,
+      class: ".box" + boxessarr.length,
       side: parseInt(window.getComputedStyle(document.getElementById("box" + boxessarr.length)).width),
       positionX: validX(),
       positionY: validY(),
@@ -154,9 +161,9 @@
   // sets the box's side sizes
   function boxSize(id) { 
     var side = 20 * sizearr.length;
-    $(id.id).css("width", String(side) + "px");
-    $(id.id).css("height", String(side) + "px");
-    id.side = parseFloat(window.getComputedStyle(document.getElementById(id.idSelector)).width);
+    $(id.idSelector).css("width", String(side) + "px");
+    $(id.idSelector).css("height", String(side) + "px");
+    id.side = parseFloat(window.getComputedStyle(document.getElementById(id.id)).width);
   }
 
   // creates and returns a valid 'left' for boxes
@@ -178,9 +185,9 @@
   }
 
   // moves the Box to a new position on the screen
-  function moveBoxTo(boxnumclass, newPositionX, newPositionY) {
-    $(boxnumclass).css("left", newPositionX);
-    $(boxnumclass).css("top", newPositionY);
+  function moveBoxTo(object, newPositionX, newPositionY) {
+    $(object.idSelector).css("left", newPositionX);
+    $(object.idSelector).css("top", newPositionY);
   }
 
   // gives the box a speed of speedInput
@@ -196,8 +203,32 @@
     return (Math.round(Math.random()) === 0 ? -1 * number : 1 * number);
   }
 
+  var colorarr = []; // implement this so that the box cannot be the background color of the board
+  for (temp = boardColor, c = 0; c < 3; c++) {
+    var result = "";
+    for (i = 0; i < temp.length; i++) {
+      var found = false;
+      if (!isNaN(parseInt(temp[i]))) {
+        found = true;
+        if (found) {
+          result += temp[i];
+          console.log(i);
+        }
+      }
+      else {
+        if (found) {
+          temp = boardColor.substring(i);
+          console.log(temp);
+        }
+      }
+    }
+    colorarr[c] = result;
+  }
+  console.log(boardColor, colorarr);
+
   // randomizes the color of the selected html element
   function randomizeColor(id) {
+    console.log(id.color);
     // color of the box
     var tempcol1 = parseInt(Math.random() * 256);
     var tempcol2 = parseInt(Math.random() * 256);
@@ -209,7 +240,7 @@
       tempcol3 = parseInt(Math.random() * 256);
     }
     id.color = "rgb(" + tempcol1 + ", " + tempcol2 + ", " + tempcol3 + ")";
-    $(id.id).css("background-color", id.color);
+    $(id.idSelector).css("background-color", id.color);
   }
 
   // updates the boxes' location every millisecond
@@ -226,7 +257,7 @@
       }
       boxessarr[i].positionY += boxessarr[i].velocityY;
 
-      moveBoxTo(boxessarr[i].class, boxessarr[i].positionX, boxessarr[i].positionY);
+      moveBoxTo(boxessarr[i], boxessarr[i].positionX, boxessarr[i].positionY);
     }
   }
 
@@ -259,14 +290,15 @@
 
     // adds a point and calculates speed
     object.speed = Math.abs(object.speed) + (speedFrame * parseInt(++points / clicked));
-    object.velocityX = randomVelocity(object.speed);
-    object.velocityY = randomVelocity(object.speed);
-    for (i = 0; i < boxessarr.length; i++) {
+    object.velocityX = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
+    object.velocityY = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
+    for (i = 0; i < boxessarr.length; i++) { // changes the speed of the other boxes
       boxessarr[i].speed = object.speed;
       boxessarr[i].velocityX = (Math.abs(boxessarr[i].velocityX) / boxessarr[i].velocityX) * boxessarr[i].speed;
       boxessarr[i].velocityY = (Math.abs(boxessarr[i].velocityY) / boxessarr[i].velocityY) * boxessarr[i].speed;
     }
 
+    // randomizes the color of the box
     randomizeColor(object);
 
     // score element
@@ -286,7 +318,6 @@
   function endGame() {
     clearInterval(updateInterval);
     document.getElementById("board").removeEventListener("click", handleBoardClick);
-    document.getElementById("box0").removeEventListener("click", handleBoxClick);
     $(".endScreen").css("display", "block");
     $(".endScreen").css("top", ((boardHeight - parseFloat(window.getComputedStyle(document.getElementById("endScreen")).height)) / 2));
     $(".endScreen").css("left", ((boardWidth - parseFloat(window.getComputedStyle(document.getElementById("endScreen")).width)) / 2));
@@ -299,12 +330,14 @@
     $(".auto").css("display", "none");
     $(".endScreen").css("display", "none");
     
+    // resets the data of the game
     points = 0;
     misClicks = 0;
     $(".score").text("Score: 0");
     $(".misses").text("Misses: 0");
     $(".accuracy").text("Accuracy: n/a");
 
+    // changes everything back to the default settings
     levelsReset(starter);
 
     $(".startScreen").css("display", "flex");
@@ -333,7 +366,7 @@
     }
     while (boxessarr.length !== 0) {
       var ele = boxessarr.pop();
-      document.getElementById("allbox").removeChild(document.getElementById(ele.idSelector));
+      document.getElementById("allbox").removeChild(document.getElementById(ele.id));
     }
   }
 
