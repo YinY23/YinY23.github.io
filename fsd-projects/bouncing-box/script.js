@@ -78,7 +78,7 @@
   
   // start game button
   function handleStartButtonClick() {
-    initialization(10, 3, 0);
+    initialization(10, 3, 1/5);
   }
   
   // changes everything that can affect the game play (for the different modes)
