@@ -258,6 +258,36 @@
       boxessarr[i].positionY += boxessarr[i].velocityY;
 
       moveBoxTo(boxessarr[i], boxessarr[i].positionX, boxessarr[i].positionY);
+      collisions();
+    }
+  }
+
+  function collisions () {
+    var cox = [];
+    for (i = 0; i < boxessarr.length - 1; i++) {
+      for (j = i + 1; j < boxessarr.length; j++) {
+        if (((boxessarr[i].positionX + boxessarr[i].side) >= boxessarr[j].positionX) && ((boxessarr[i].positionY + boxessarr[i].side) >= boxessarr[j].positionY) && (boxessarr[i].positionX <= (boxessarr[j].positionX + boxessarr[j].side)) && (boxessarr[i].positionY <= (boxessarr[j].positionY + boxessarr[j].side))) {
+          cox.push(i , j);
+        }
+      }
+    }
+    while (cox.length > 0) {
+      if (Math.abs(boxessarr[cox[cox.length - 2]].positionX - boxessarr[cox[cox.length - 1]].positionX) > Math.abs(boxessarr[cox[cox.length - 2]].positionY - boxessarr[cox[cox.length - 1]].positionY)) {
+        boxessarr[cox[cox.length - 2]].velocityX *= -1;
+        boxessarr[cox[cox.length - 1]].velocityX *= -1;
+      }
+      else if (Math.abs(boxessarr[cox[cox.length - 2]].positionX - boxessarr[cox[cox.length - 1]].positionX) < Math.abs(boxessarr[cox[cox.length - 2]].positionY - boxessarr[cox[cox.length - 1]].positionY)) {
+        boxessarr[cox[cox.length - 2]].velocityY *= -1;
+        boxessarr[cox[cox.length - 1]].velocityY *= -1;
+      }
+      else {
+        boxessarr[cox[cox.length - 2]].velocityX *= -1;
+        boxessarr[cox[cox.length - 2]].velocityY *= -1;
+        boxessarr[cox[cox.length - 1]].velocityX *= -1;
+        boxessarr[cox[cox.lenght - 1]].velocityY *= -1;
+      }
+      cox.pop();
+      cox.pop();
     }
   }
 
