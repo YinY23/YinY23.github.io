@@ -120,9 +120,21 @@
 }
 
 #startDiv {
-    display: flex;
+    display: flexbox;
     width: 30%;
     height: 100%;
+
+    justify-items: center;
+    align-content: center;
+}
+
+#collisions {
+    display: flexbox;
+    margin-bottom: 10%;
+}
+
+#header{
+    font-size: 150%;
 }
 
 #startButton {
@@ -134,7 +146,7 @@
     font-family: fantasy;
     color: pink;
 
-    margin: auto;
+    margin-bottom: 50%;
 }
 
 .main {

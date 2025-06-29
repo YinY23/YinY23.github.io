@@ -84,7 +84,7 @@
   
   // start game button
   function handleStartButtonClick() {
-    initialization(10, 3, 1/3);
+    initialization(10, 3, 1/5);
   }
   
   // changes everything that can affect the game play (for the different modes)
@@ -124,6 +124,7 @@
   // be able to switch the handle clicks
   var action = false;
 
+  var idk = 30;
   var points = 0; // points used for score and speed calculation
   var misClicks = 0; // amount of misclicks
   var threshold; // amount of misclicks for the game to end
@@ -160,7 +161,7 @@
 
   // sets the box's side sizes
   function boxSize(id) { 
-    var side = 20 * sizearr.length;
+    var side = 30 * sizearr.length;
     $(id.idSelector).css("width", String(side) + "px");
     $(id.idSelector).css("height", String(side) + "px");
     id.side = parseFloat(window.getComputedStyle(document.getElementById(id.id)).width);
@@ -169,8 +170,17 @@
   // creates and returns a valid 'left' for boxes
   function validX() {
     rngX = Math.random();
-    while (rngX >= 1 - ((sizearr.length * 20) / boardWidth)) {
-      rngX = Math.random();
+    
+    for (i = 0; i < boxessarr.length; i++) {
+      if (rngX * parseInt(boardWidth) + boxessarr[i].side >= boxessarr[i].positionX && rngX * parseInt(boardWidth) <= boxessarr[i].positionX + boxessarr[i].side) {
+        i = -1;
+        rngX = Math.random();
+      }
+      else {
+        while (rngX >= 1 - ((sizearr.length * idk) / boardWidth)) {
+          rngX = Math.random();
+        }
+      }
     }
     return rngX * parseInt(boardWidth);
   }
@@ -178,7 +188,7 @@
   // creates and returns a valid 'top' for boxes
   function validY() {
     rngY = Math.random();
-    while (rngY >= 1 - ((sizearr.length * 20) / boardHeight) || rngY <= (parseFloat(window.getComputedStyle(document.getElementById("navigation")).height) + parseFloat(window.getComputedStyle(document.getElementById("navigation")).marginTop)) / boardHeight) {
+    while (rngY >= 1 - ((sizearr.length * idk) / boardHeight) || rngY <= (parseFloat(window.getComputedStyle(document.getElementById("navigation")).height) + parseFloat(window.getComputedStyle(document.getElementById("navigation")).marginTop)) / boardHeight) {
       rngY = Math.random();
     }
     return rngY * parseInt(boardHeight)
@@ -192,7 +202,7 @@
 
   // gives the box a speed of speedInput
   function boxSpeed(id) {
-    id.speed = speedarr.length;
+    id.speed = speedarr.length * .5;
     id.velocityX = randomVelocity(id.speed);
     id.velocityY = randomVelocity(id.speed);
     
@@ -228,7 +238,6 @@
 
   // randomizes the color of the selected html element
   function randomizeColor(id) {
-    console.log(id.color);
     // color of the box
     var tempcol1 = parseInt(Math.random() * 256);
     var tempcol2 = parseInt(Math.random() * 256);
@@ -258,7 +267,9 @@
       boxessarr[i].positionY += boxessarr[i].velocityY;
 
       moveBoxTo(boxessarr[i], boxessarr[i].positionX, boxessarr[i].positionY);
-      collisions();
+      if (document.getElementById("collideOn").checked) {
+        collisions();
+      }
     }
   }
 
@@ -284,7 +295,7 @@
         boxessarr[cox[cox.length - 2]].velocityX *= -1;
         boxessarr[cox[cox.length - 2]].velocityY *= -1;
         boxessarr[cox[cox.length - 1]].velocityX *= -1;
-        boxessarr[cox[cox.lenght - 1]].velocityY *= -1;
+        boxessarr[cox[cox.length - 1]].velocityY *= -1;
       }
       cox.pop();
       cox.pop();
@@ -319,14 +330,18 @@
     object.positionY = validY();
 
     // adds a point and calculates speed
-    object.speed = Math.abs(object.speed) + (speedFrame * parseInt(++points / clicked));
-    object.velocityX = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
-    object.velocityY = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
-    for (i = 0; i < boxessarr.length; i++) { // changes the speed of the other boxes
-      boxessarr[i].speed = object.speed;
-      boxessarr[i].velocityX = (Math.abs(boxessarr[i].velocityX) / boxessarr[i].velocityX) * boxessarr[i].speed;
-      boxessarr[i].velocityY = (Math.abs(boxessarr[i].velocityY) / boxessarr[i].velocityY) * boxessarr[i].speed;
+    if (++points % clicked === 0) {
+      object.speed = Math.abs(object.speed) + speedFrame;
+      object.velocityX = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
+      object.velocityY = randomVelocity(object.speed); // changes the velocity of the box after changing the speed and position
+      for (i = 0; i < boxessarr.length; i++) { // changes the speed of the other boxes
+        boxessarr[i].speed = object.speed;
+        console.log(boxessarr[i].speed);
+        boxessarr[i].velocityX = (Math.abs(boxessarr[i].velocityX) / boxessarr[i].velocityX) * boxessarr[i].speed;
+        boxessarr[i].velocityY = (Math.abs(boxessarr[i].velocityY) / boxessarr[i].velocityY) * boxessarr[i].speed;
+      }
     }
+    console.log(object.speed);
 
     // randomizes the color of the box
     randomizeColor(object);
@@ -398,6 +413,7 @@
       var ele = boxessarr.pop();
       document.getElementById("allbox").removeChild(document.getElementById(ele.id));
     }
+    $("#collideOff").prop("checked", "checked");
   }
 
 })();
