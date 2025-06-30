@@ -213,29 +213,6 @@
     return (Math.round(Math.random()) === 0 ? -1 * number : 1 * number);
   }
 
-  var colorarr = []; // implement this so that the box cannot be the background color of the board
-  for (temp = boardColor, c = 0; c < 3; c++) {
-    var result = "";
-    for (i = 0; i < temp.length; i++) {
-      var found = false;
-      if (!isNaN(parseInt(temp[i]))) {
-        found = true;
-        if (found) {
-          result += temp[i];
-          console.log(i);
-        }
-      }
-      else {
-        if (found) {
-          temp = boardColor.substring(i);
-          console.log(temp);
-        }
-      }
-    }
-    colorarr[c] = result;
-  }
-  console.log(boardColor, colorarr);
-
   // randomizes the color of the selected html element
   function randomizeColor(id) {
     // color of the box
