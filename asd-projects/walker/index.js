@@ -1,8 +1,8 @@
 /* global $, sessionStorage */
 
 $(document).ready(runProgram); // wait for the HTML / CSS elements of the page to fully load, then execute runProgram()
-  
-function runProgram(){
+
+function runProgram() {
   ////////////////////////////////////////////////////////////////////////////////
   //////////////////////////// SETUP /////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
@@ -21,22 +21,22 @@ function runProgram(){
     s: 83,
     d: 68,
     W: 119,
-    A: 97, 
+    A: 97,
     S: 115,
     D: 100,
   };
-  
+
   // Game Item Objects
 
   var walker = {
     x: 0,
-    y: 0, 
+    y: 0,
     speedX: 0,
-    speedY: 0
+    speedY: 0,
   };
 
   // one-time setup
-  var interval = setInterval(newFrame, FRAMES_PER_SECOND_INTERVAL);   // execute newFrame every 0.0166 seconds (60 Frames per second)
+  var interval = setInterval(newFrame, FRAMES_PER_SECOND_INTERVAL); // execute newFrame every 0.0166 seconds (60 Frames per second)
 
   /* 
   This section is where you set up event listeners for user input.
@@ -44,7 +44,7 @@ function runProgram(){
 
   Note: You can have multiple event listeners for different types of events.
   */
-  $(document).on('keydown', handleKeyDown);
+  $(document).on("keydown", handleKeyDown);
   $(document).on("keyup", handleKeyUp);
   $(document).on("click", handleClick);
 
@@ -57,13 +57,11 @@ function runProgram(){
   by calling this function and executing the code inside.
   */
   function newFrame() {
-    
     repositionGameItem();
     wallCollision();
-    redrawGameItem()
-
+    redrawGameItem();
   }
-  
+
   /* 
   This section is where you set up the event handlers for user input.
   For example, if you wanted to make an event handler for a click event, you should rename this function to 'handleClick', then write the code that should execute when the click event occurs.
@@ -71,49 +69,72 @@ function runProgram(){
   Note: You can have multiple event handlers for different types of events.
   */
   function handleKeyDown(event) {
-
-    if (event.which === KEY.LEFT || event.which === KEY.a || event.which === KEY.A) {
+    if (
+      event.which === KEY.LEFT ||
+      event.which === KEY.a ||
+      event.which === KEY.A
+    ) {
       walker.speedX -= 5;
-    }
-    else if (event.which === KEY.DOWN || event.which === KEY.s || event.which === KEY.S) {
+    } else if (
+      event.which === KEY.DOWN ||
+      event.which === KEY.s ||
+      event.which === KEY.S
+    ) {
       walker.speedY += 5;
-    }
-    else if (event.which === KEY.RIGHT || event.which === KEY.d || event.which === KEY.D) {
+    } else if (
+      event.which === KEY.RIGHT ||
+      event.which === KEY.d ||
+      event.which === KEY.D
+    ) {
       walker.speedX += 5;
-    }
-    else if (event.which === KEY.UP || event.which === KEY.w || event.which === KEY.W) {
+    } else if (
+      event.which === KEY.UP ||
+      event.which === KEY.w ||
+      event.which === KEY.W
+    ) {
       walker.speedY -= 5;
     }
-
   }
 
   function handleKeyUp(event) {
-
-    if (event.which === KEY.LEFT || event.which === KEY.a || event.which === KEY.A) {
+    if (
+      event.which === KEY.LEFT ||
+      event.which === KEY.a ||
+      event.which === KEY.A
+    ) {
       walker.speedX = 0;
-    }
-    else if (event.which === KEY.DOWN || event.which === KEY.s || event.which === KEY.S) {
+    } else if (
+      event.which === KEY.DOWN ||
+      event.which === KEY.s ||
+      event.which === KEY.S
+    ) {
+      walker.speedY = 0;
+    } else if (
+      event.which === KEY.RIGHT ||
+      event.which === KEY.d ||
+      event.which === KEY.D
+    ) {
+      walker.speedX = 0;
+    } else if (
+      event.which === KEY.UP ||
+      event.which === KEY.w ||
+      event.which === KEY.W
+    ) {
       walker.speedY = 0;
     }
-    else if (event.which === KEY.RIGHT || event.which === KEY.d || event.which === KEY.D) {
-      walker.speedX = 0;
-    }
-    else if (event.which === KEY.UP || event.which === KEY.w || event.which === KEY.W) {
-      walker.speedY = 0;
-    }
-
   }
 
   function handleClick() {
-
     let rng1 = Math.floor(Math.random() * 255);
     let rng2 = Math.floor(Math.random() * 255);
     let rng3 = Math.floor(Math.random() * 255);
 
     console.log(rng1, rng2, rng3);
 
-    $("#walker").css("background-color", "rgb(" + rng1 + ", " + rng2 + ", " + rng3 + ")")
-
+    $("#walker").css(
+      "background-color",
+      "rgb(" + rng1 + ", " + rng2 + ", " + rng3 + ")"
+    );
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -132,7 +153,6 @@ function runProgram(){
   }
 
   function wallCollision() {
-
     let board = $("#board");
     let unit = $("#walker");
 
@@ -161,5 +181,4 @@ function runProgram(){
     // turn off event handlers
     $(document).off();
   }
-  
 }
