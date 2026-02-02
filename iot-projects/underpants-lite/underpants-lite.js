@@ -115,6 +115,15 @@ _.last = function (arr, num) {
  *   _.indexOf(["a","b","c"], "d") -> -1
  */
 
+_.indexOf = function(arr, val) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === val) {
+      return i;
+    }
+  }
+  return -1;
+};
+
 /** _.contains
  * Arguments:
  *   1) An array
@@ -129,6 +138,15 @@ _.last = function (arr, num) {
  *   _.contains([1,"two", 3.14], "two") -> true
  *   _.contains([1,"two", 3.14], "three") -> false
  */
+
+_.contains = function(arr, val) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === val) {
+      return true;
+    }
+  }
+  return false;
+}
 
 /** _.each
  * Arguments:
@@ -145,6 +163,19 @@ _.last = function (arr, num) {
  *   _.each(["a","b","c"], function(e,i,a){ console.log(e); });
  *      -> should log "a" "b" "c" to the console
  */
+
+_.each = function(coll, func) {
+  if (this.typeOf(coll) === "array") { // array logic
+    for (let i = 0; i < coll.length; i++) {
+      func(coll[i], i, coll);
+    }
+  }
+  else { // object logic
+    for (let i = 0; i < Object.keys(coll).length; i++) {
+      func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll);
+    }
+  }
+}
 
 /** _.filter
  * Arguments:
@@ -163,6 +194,17 @@ _.last = function (arr, num) {
  *   use _.each in your implementation
  */
 
+_.filter = function(arr, func) {
+  let newarr = [];
+  for (let i = 0; i < arr.length; i++) {
+    let curr = func(arr[i], i, arr);
+    if (curr) {
+      newarr.push(arr[i]);
+    }
+  }
+  return newarr;
+}
+
 /** _.map
  * Arguments:
  *   1) A collection
@@ -180,6 +222,23 @@ _.last = function (arr, num) {
  *   _.map([1,2,3,4], function(e){ return e * 2; }) -> [2,4,6,8]
  */
 
+_.map = function(coll, func) {
+  let newarr = [];
+  if (this.typeOf(coll) === "array") {
+    for (let i = 0; i < coll.length; i++) {
+      let val = func(coll[i], i, coll);
+      newarr.push(val);
+    }
+  }
+  else {
+    for (let i = 0; i < Object.keys(coll).length; i++) {
+      let val = func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll);
+      newarr.push(val);
+    }
+  }
+  return newarr;
+}
+
 /** _.reject
  * Arguments:
  *   1) An array
@@ -195,6 +254,17 @@ _.last = function (arr, num) {
  * Examples:
  *   _.reject([1,2,3,4,5], function(e){ return e%2 === 0}; ) -> [1,3,5]
  */
+
+_.reject = function(arr, func) {
+  let newarr = [];
+  for (let i = 0; i < arr.length; i++) {
+    let val = func(arr[i], i, arr);
+    if (!val) {
+      newarr.push(arr[i]);
+    }
+  }
+  return newarr;
+}
 
 /** _.partition
 * Arguments:
@@ -214,6 +284,19 @@ _.last = function (arr, num) {
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+
+_.partition = function(arr, func) {
+  let newarr = [[], []]
+  for (let i = 0; i < arr.length; i++) {
+    if (func(arr[i], i, arr)) {
+      newarr[0].push(arr[i]);
+    }
+    else {
+      newarr[1].push(arr[i]);
+    }
+  }
+  return newarr;
+}
 
 /** _.every
  * Arguments:
@@ -237,6 +320,46 @@ _.last = function (arr, num) {
  *   _.every([1,2,3], function(e){ return e % 2 === 0}; ) -> false
  */
 
+_.every = function(coll, func) {
+  let atleastOneFalse = false;
+  if (!func) {
+    if (this.typeOf(coll) === "array") {
+      for (let i = 0; i < coll.length; i++) {
+        if (!coll[i]) {
+          atleastOneFalse = true;
+        }
+      }
+    }
+    else {
+      for (let i = 0; i < Object.keys(coll).length; i++) {
+        if (!coll[Object.keys(coll)[i]]) {
+          atleastOneFalse = true;
+        }
+      }
+    }
+  }
+  else {
+    if (this.typeOf(coll) === "array") {
+      for (let i = 0; i < coll.length; i++) {
+        if (!func(coll[i], i, coll)) {
+          atleastOneFalse = true;
+        }
+      }
+    }
+    else {
+      for (let i = 0; i < Object.keys(coll).length; i++) {
+        if (!func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll)) {
+          atleastOneFalse = true;
+        }
+      }
+    }
+  }
+  if (atleastOneFalse) {
+      return false;
+    }
+    return true;
+}
+
 /** _.some
  * Arguments:
  *   1) A collection
@@ -259,6 +382,42 @@ _.last = function (arr, num) {
  *   _.some([1,2,3], function(e){ return e % 2 === 0}; ) -> true
  */
 
+_.some = function(coll, func) {
+  if (!func) {
+    if (this.typeOf(coll) === "array") {
+      for (let i = 0; i < coll.length; i++) {
+        if (coll[i]) {
+          return true;
+        }
+      }
+    }
+    else {
+      for (let i = 0; i < Object.keys(coll).length; i++) {
+        if (coll[Object.keys(coll)[i]]) {
+          return true;
+        }
+      }
+    }
+  }
+  else {
+    if (this.typeOf(coll) === "array") {
+      for (let i = 0; i < coll.length; i++) {
+        if (func(coll[i], i, coll)) {
+          return true;
+        }
+      }
+    }
+    else {
+      for (let i = 0; i < Object.keys(coll).length; i++) {
+        if (!func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 /** _.pluck
  * Arguments:
  *   1) An array of objects
@@ -269,6 +428,12 @@ _.last = function (arr, num) {
  * Examples:
  *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
  */
+
+_.pluck = function(arr, property) {
+  return this.map(arr, function(currObj) {
+    return currObj[property];
+  });
+}
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
