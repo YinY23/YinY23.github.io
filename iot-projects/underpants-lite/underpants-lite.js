@@ -115,7 +115,7 @@ _.last = function (arr, num) {
  *   _.indexOf(["a","b","c"], "d") -> -1
  */
 
-_.indexOf = function(arr, val) {
+_.indexOf = function (arr, val) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === val) {
       return i;
@@ -139,14 +139,14 @@ _.indexOf = function(arr, val) {
  *   _.contains([1,"two", 3.14], "three") -> false
  */
 
-_.contains = function(arr, val) {
+_.contains = function (arr, val) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] === val) {
       return true;
     }
   }
   return false;
-}
+};
 
 /** _.each
  * Arguments:
@@ -164,18 +164,19 @@ _.contains = function(arr, val) {
  *      -> should log "a" "b" "c" to the console
  */
 
-_.each = function(coll, func) {
-  if (this.typeOf(coll) === "array") { // array logic
+_.each = function (coll, func) {
+  if (this.typeOf(coll) === "array") {
+    // array logic
     for (let i = 0; i < coll.length; i++) {
       func(coll[i], i, coll);
     }
-  }
-  else { // object logic
+  } else {
+    // object logic
     for (let i = 0; i < Object.keys(coll).length; i++) {
       func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll);
     }
   }
-}
+};
 
 /** _.filter
  * Arguments:
@@ -194,7 +195,7 @@ _.each = function(coll, func) {
  *   use _.each in your implementation
  */
 
-_.filter = function(arr, func) {
+_.filter = function (arr, func) {
   let newarr = [];
   for (let i = 0; i < arr.length; i++) {
     let curr = func(arr[i], i, arr);
@@ -203,7 +204,7 @@ _.filter = function(arr, func) {
     }
   }
   return newarr;
-}
+};
 
 /** _.map
  * Arguments:
@@ -222,22 +223,21 @@ _.filter = function(arr, func) {
  *   _.map([1,2,3,4], function(e){ return e * 2; }) -> [2,4,6,8]
  */
 
-_.map = function(coll, func) {
+_.map = function (coll, func) {
   let newarr = [];
   if (this.typeOf(coll) === "array") {
     for (let i = 0; i < coll.length; i++) {
       let val = func(coll[i], i, coll);
       newarr.push(val);
     }
-  }
-  else {
+  } else {
     for (let i = 0; i < Object.keys(coll).length; i++) {
       let val = func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll);
       newarr.push(val);
     }
   }
   return newarr;
-}
+};
 
 /** _.reject
  * Arguments:
@@ -255,7 +255,7 @@ _.map = function(coll, func) {
  *   _.reject([1,2,3,4,5], function(e){ return e%2 === 0}; ) -> [1,3,5]
  */
 
-_.reject = function(arr, func) {
+_.reject = function (arr, func) {
   let newarr = [];
   for (let i = 0; i < arr.length; i++) {
     let val = func(arr[i], i, arr);
@@ -264,7 +264,7 @@ _.reject = function(arr, func) {
     }
   }
   return newarr;
-}
+};
 
 /** _.partition
 * Arguments:
@@ -285,18 +285,17 @@ _.reject = function(arr, func) {
 }
 */
 
-_.partition = function(arr, func) {
-  let newarr = [[], []]
+_.partition = function (arr, func) {
+  let newarr = [[], []];
   for (let i = 0; i < arr.length; i++) {
     if (func(arr[i], i, arr)) {
       newarr[0].push(arr[i]);
-    }
-    else {
+    } else {
       newarr[1].push(arr[i]);
     }
   }
   return newarr;
-}
+};
 
 /** _.every
  * Arguments:
@@ -320,7 +319,7 @@ _.partition = function(arr, func) {
  *   _.every([1,2,3], function(e){ return e % 2 === 0}; ) -> false
  */
 
-_.every = function(coll, func) {
+_.every = function (coll, func) {
   let atleastOneFalse = false;
   if (!func) {
     if (this.typeOf(coll) === "array") {
@@ -329,24 +328,21 @@ _.every = function(coll, func) {
           atleastOneFalse = true;
         }
       }
-    }
-    else {
+    } else {
       for (let i = 0; i < Object.keys(coll).length; i++) {
         if (!coll[Object.keys(coll)[i]]) {
           atleastOneFalse = true;
         }
       }
     }
-  }
-  else {
+  } else {
     if (this.typeOf(coll) === "array") {
       for (let i = 0; i < coll.length; i++) {
         if (!func(coll[i], i, coll)) {
           atleastOneFalse = true;
         }
       }
-    }
-    else {
+    } else {
       for (let i = 0; i < Object.keys(coll).length; i++) {
         if (!func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll)) {
           atleastOneFalse = true;
@@ -355,10 +351,10 @@ _.every = function(coll, func) {
     }
   }
   if (atleastOneFalse) {
-      return false;
-    }
-    return true;
-}
+    return false;
+  }
+  return true;
+};
 
 /** _.some
  * Arguments:
@@ -382,7 +378,7 @@ _.every = function(coll, func) {
  *   _.some([1,2,3], function(e){ return e % 2 === 0}; ) -> true
  */
 
-_.some = function(coll, func) {
+_.some = function (coll, func) {
   if (!func) {
     if (this.typeOf(coll) === "array") {
       for (let i = 0; i < coll.length; i++) {
@@ -390,24 +386,21 @@ _.some = function(coll, func) {
           return true;
         }
       }
-    }
-    else {
+    } else {
       for (let i = 0; i < Object.keys(coll).length; i++) {
         if (coll[Object.keys(coll)[i]]) {
           return true;
         }
       }
     }
-  }
-  else {
+  } else {
     if (this.typeOf(coll) === "array") {
       for (let i = 0; i < coll.length; i++) {
         if (func(coll[i], i, coll)) {
           return true;
         }
       }
-    }
-    else {
+    } else {
       for (let i = 0; i < Object.keys(coll).length; i++) {
         if (!func(coll[Object.keys(coll)[i]], Object.keys(coll)[i], coll)) {
           return true;
@@ -416,7 +409,7 @@ _.some = function(coll, func) {
     }
   }
   return false;
-}
+};
 
 /** _.pluck
  * Arguments:
@@ -429,11 +422,11 @@ _.some = function(coll, func) {
  *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
  */
 
-_.pluck = function(arr, property) {
-  return this.map(arr, function(currObj) {
+_.pluck = function (arr, property) {
+  return this.map(arr, function (currObj) {
     return currObj[property];
   });
-}
+};
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
