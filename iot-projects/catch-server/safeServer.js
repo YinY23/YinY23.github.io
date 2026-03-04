@@ -24,8 +24,8 @@ function requestHandling(req, res) {
           body += chunk;
         });
         req.on("end", function () {
-          serverStatus = JSON.parse(body);
-          // serverStatus.status = JSON.parse(body);
+          serverStatus = {};
+          serverStatus.status = body;
         });
         res.writeHead(200, { "Content-Type": "text/plain" }); //method 2
         res.write("The server has been updated.");
