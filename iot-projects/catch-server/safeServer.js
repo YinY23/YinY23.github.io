@@ -9,7 +9,14 @@ function requestHandling(req, res) {
     switch (req.method) {
       case "GET":
         res.writeHead(200, { "Content-Type": "text/plain" });
-        res.write(serverStatus.status); //method 1 continued
+        if (serverStatus?.status) {
+          res.write(serverStatus.status);
+        } else {
+          res.write("No status.");
+        }
+        if (serverStatus?.messages) {
+          res.write(serverStatus.messages);
+        }
         break;
       case "PUT":
         let body = "";
@@ -44,7 +51,7 @@ function requestHandling(req, res) {
   } catch (e) {
     console.log(e);
     res.statusCode = 500;
-    res.write("The server has no data.");
+    res.write("An error has ocurred.");
   } finally {
     res.write("-and the message arrived");
     res.end();
