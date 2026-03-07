@@ -12,10 +12,12 @@ function requestHandling(req, res) {
         if (serverStatus?.status) {
           res.write(serverStatus.status);
         } else {
-          res.write("No status.");
+          res.write("No status yet.");
         }
         if (serverStatus?.messages) {
-          res.write(serverStatus.messages);
+          for (let message of serverStatus.messages) {
+            res.write(message + ", ");
+          }
         }
         break;
       case "PUT":
@@ -24,7 +26,9 @@ function requestHandling(req, res) {
           body += chunk;
         });
         req.on("end", function () {
-          serverStatus = {};
+          if (!serverStatus) {
+            serverStatus = {};
+          }
           serverStatus.status = body;
         });
         res.writeHead(200, { "Content-Type": "text/plain" }); //method 2
@@ -32,9 +36,13 @@ function requestHandling(req, res) {
         break;
       case "DELETE":
         res.writeHead(200, { "Content-Type": "text/plain" });
-        let tempStatus = serverStatus.status;
-        serverStatus = undefined;
-        res.write("Successfully deleted data:" + tempStatus);
+        if (!serverStatus?.status) {
+          res.write("There is no status.");
+        } else {
+          let tempStatus = serverStatus.status;
+          serverStatus.status = null;
+          res.write("Successfully deleted status:" + tempStatus);
+        }
         break;
       case "POST":
         let body2 = "";
@@ -42,10 +50,16 @@ function requestHandling(req, res) {
           body2 += chunk;
         });
         req.on("end", function () {
-          serverStatus.messages = [];
+          if (!serverStatus) {
+            serverStatus = {};
+          }
+          if (!serverStatus?.messages) {
+            serverStatus.messages = [];
+          }
           serverStatus.messages.push(body2);
         });
-
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.write("Successfully added message:" + body2);
         break;
     }
   } catch (e) {
