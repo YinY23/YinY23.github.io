@@ -30,7 +30,7 @@ const server = http.createServer(function (req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
+    "GET, POST, PUT, DELETE, OPTIONS",
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   /* DO NOT EDIT THIS CODE */
@@ -51,6 +51,16 @@ const server = http.createServer(function (req, res) {
 });
 
 //TODO 7: WebSocket Server
+const wss = new WebSocket.Server({ server });
+wss.on("connection", function (socket) {
+  let temperatureJSON;
+  setInterval(function () {
+    if (socket.readyState === WebSocket.OPEN) {
+      temperatureJSON = { key: temperature };
+      socket.send(JSON.stringify(temperatureJSON));
+    }
+  }, 1000);
+});
 
 /* DO NOT EDIT THIS CODE */
 server.listen(port);
