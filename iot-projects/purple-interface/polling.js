@@ -163,7 +163,7 @@ $(document).ready(function () {
     // TODO 8: Purple Air JSON Polling
     var settingsquality = {
       headers: {
-        "X-API-Key": "C21B7492-223C-11F1-B596-4201AC1DC123",
+        "X-API-Key": process.env.PURPLE_AIR_API_KEY, // does not work
       },
       data: {
         fields: "pm2.5",
@@ -181,7 +181,7 @@ $(document).ready(function () {
           addDataPoint(result, ajaxAirData, ajaxAirChart);
         })
         .fail(function () {
-          console.error("ajax error:", error);
+          console.error("ajax error:");
         });
     }
 
@@ -189,7 +189,7 @@ $(document).ready(function () {
     // TODO 9: AJAX Polling
     var settingstemperature = {
       headers: {
-        "X-API-Key": "C21B7492-223C-11F1-B596-4201AC1DC123",
+        "X-API-Key": process.env.PURPLE_AIR_API_KEY, // does not work
       },
       data: {
         fields: "temperature",
@@ -206,7 +206,7 @@ $(document).ready(function () {
           addDataPoint(result, ajaxTempData, ajaxTempChart);
         })
         .fail(function () {
-          console.error("ajax error:", error);
+          console.error("ajax error:");
         });
     }
 

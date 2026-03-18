@@ -1,5 +1,4 @@
 // A server that simulates a device that is taking regular temperature readings.
-
 // Load the http module to create an http server.
 const http = require("http");
 const WebSocket = require("ws");
