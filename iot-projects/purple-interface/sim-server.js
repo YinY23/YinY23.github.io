@@ -2,7 +2,9 @@
 // Load the http module to create an http server.
 const http = require("http");
 const WebSocket = require("ws");
+const dotEnv = require("dotenv").config();
 const port = 8080;
+console.log(process.env.PURPLE_AIR_API_KEY);
 
 //TODO 1: Variables and generateTemperature function
 var temperature = 72;
