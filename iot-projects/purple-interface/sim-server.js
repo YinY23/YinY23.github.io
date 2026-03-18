@@ -30,7 +30,7 @@ const server = http.createServer(function (req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS",
+    "GET, POST, PUT, DELETE, OPTIONS"
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   /* DO NOT EDIT THIS CODE */
@@ -41,7 +41,7 @@ const server = http.createServer(function (req, res) {
     res.writeHead(200, { "content-type": "application/json" });
     switch (req.method) {
       case "GET":
-        temperatureJSON = { key: temperature };
+        temperatureJSON = { value: temperature };
         break;
     }
   } catch (e) {
@@ -56,7 +56,7 @@ wss.on("connection", function (socket) {
   let temperatureJSON;
   setInterval(function () {
     if (socket.readyState === WebSocket.OPEN) {
-      temperatureJSON = { key: temperature };
+      temperatureJSON = { value: temperature };
       socket.send(JSON.stringify(temperatureJSON));
     }
   }, 1000);
